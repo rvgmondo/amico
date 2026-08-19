@@ -67,8 +67,17 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    vehicles: Vehicle;
+    makes: Make;
+    models: Model;
+    enquiries: Enquiry;
+    posts: Post;
+    categories: Category;
+    testimonials: Testimonial;
+    team: Team;
+    pages: Page;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,8 +85,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
+    makes: MakesSelect<false> | MakesSelect<true>;
+    models: ModelsSelect<false> | ModelsSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    team: TeamSelect<false> | TeamSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +105,14 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,29 +143,113 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "vehicles".
  */
-export interface User {
+export interface Vehicle {
   id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
+  /**
+   * Full title, e.g. "Ford Ranger 2.0D XLT Double Cab Auto 2021".
+   */
+  title: string;
+  make: number | Make;
+  model?: (number | null) | Model;
+  variant?: string | null;
+  /**
+   * Price in ZAR (Rand).
+   */
+  price: number;
+  year: number;
+  /**
+   * Kilometres.
+   */
+  mileage?: number | null;
+  bodyType?:
+    ('suv' | 'hatchback' | 'sedan' | 'single-cab' | 'double-cab' | 'coupe' | 'mpv' | 'wagon' | 'crossover') | null;
+  fuelType?: ('petrol' | 'diesel' | 'hybrid' | 'electric') | null;
+  transmission?: ('manual' | 'automatic') | null;
+  drivetrain?: ('fwd' | 'rwd' | 'awd' | '4x4' | '4x2') | null;
+  /**
+   * e.g. "2.0L turbo".
+   */
+  engine?: string | null;
+  /**
+   * e.g. "132 kW".
+   */
+  power?: string | null;
+  exteriorColour?: string | null;
+  interiorColour?: string | null;
+  /**
+   * Ordered gallery. The first image is the primary/cover photo.
+   */
+  images?: (number | Media)[] | null;
+  /**
+   * Key selling features (e.g. Leather seats, Sunroof, Reverse camera).
+   */
+  features?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        feature: string;
+        id?: string | null;
       }[]
     | null;
-  password?: string | null;
-  collection: 'users';
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  condition?: ('used' | 'demo' | 'new') | null;
+  status: 'available' | 'reserved' | 'sold';
+  /**
+   * Show on the homepage featured row.
+   */
+  featured?: boolean | null;
+  stockNumber?: string | null;
+  vin?: string | null;
+  /**
+   * Original listing URL (provenance for seeded data).
+   */
+  sourceUrl?: string | null;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "makes".
+ */
+export interface Make {
+  id: number;
+  name: string;
+  /**
+   * Optional brand logo.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -164,6 +272,266 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    feature?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "models".
+ */
+export interface Model {
+  id: number;
+  name: string;
+  make: number | Make;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  type: 'general' | 'vehicle' | 'test-drive' | 'finance' | 'trade-in' | 'contact';
+  status: 'new' | 'contacted' | 'closed';
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  /**
+   * The vehicle this lead is about, if any.
+   */
+  vehicle?: (number | null) | Vehicle;
+  /**
+   * For test-drive bookings.
+   */
+  preferredDate?: string | null;
+  message?: string | null;
+  /**
+   * Extra structured fields from trade-in / finance forms.
+   */
+  details?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  consent?: boolean | null;
+  /**
+   * Submitting page URL.
+   */
+  source?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  /**
+   * Short summary for cards and meta descriptions.
+   */
+  excerpt?: string | null;
+  coverImage?: (number | null) | Media;
+  category?: (number | null) | Category;
+  author?: string | null;
+  publishedDate?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  author: string;
+  quote: string;
+  location?: string | null;
+  rating?: number | null;
+  date?: string | null;
+  /**
+   * Prioritise on the homepage.
+   */
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team".
+ */
+export interface Team {
+  id: number;
+  name: string;
+  /**
+   * Job title, e.g. Sales Manager.
+   */
+  role?: string | null;
+  photo?: (number | null) | Media;
+  bio?: string | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from the name if left blank.
+   */
+  slug?: string | null;
+  hero?: {
+    heading?: string | null;
+    subheading?: string | null;
+    image?: (number | null) | Media;
+  };
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  /**
+   * Admins manage users & settings. Editors manage content & inventory.
+   */
+  roles: ('admin' | 'editor')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -190,12 +558,48 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'vehicles';
+        value: number | Vehicle;
+      } | null)
+    | ({
+        relationTo: 'makes';
+        value: number | Make;
+      } | null)
+    | ({
+        relationTo: 'models';
+        value: number | Model;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'team';
+        value: number | Team;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -241,26 +645,176 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "vehicles_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface VehiclesSelect<T extends boolean = true> {
+  title?: T;
+  make?: T;
+  model?: T;
+  variant?: T;
+  price?: T;
+  year?: T;
+  mileage?: T;
+  bodyType?: T;
+  fuelType?: T;
+  transmission?: T;
+  drivetrain?: T;
+  engine?: T;
+  power?: T;
+  exteriorColour?: T;
+  interiorColour?: T;
+  images?: T;
+  features?:
     | T
     | {
+        feature?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  description?: T;
+  condition?: T;
+  status?: T;
+  featured?: T;
+  stockNumber?: T;
+  vin?: T;
+  sourceUrl?: T;
+  slug?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "makes_select".
+ */
+export interface MakesSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "models_select".
+ */
+export interface ModelsSelect<T extends boolean = true> {
+  name?: T;
+  make?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  type?: T;
+  status?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  vehicle?: T;
+  preferredDate?: T;
+  message?: T;
+  details?: T;
+  consent?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  coverImage?: T;
+  category?: T;
+  author?: T;
+  publishedDate?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  author?: T;
+  quote?: T;
+  location?: T;
+  rating?: T;
+  date?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team_select".
+ */
+export interface TeamSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  photo?: T;
+  bio?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  hero?:
+    | T
+    | {
+        heading?: T;
+        subheading?: T;
+        image?: T;
+      };
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -279,6 +833,74 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        feature?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -319,6 +941,190 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  dealershipName?: string | null;
+  /**
+   * e.g. SA Multi Franchise Group.
+   */
+  legalName?: string | null;
+  tagline?: string | null;
+  /**
+   * Hide sold vehicles from public listings.
+   */
+  hideSoldVehicles?: boolean | null;
+  contact?: {
+    street?: string | null;
+    suburb?: string | null;
+    city?: string | null;
+    postalCode?: string | null;
+    email?: string | null;
+    phones?:
+      | {
+          label?: string | null;
+          number?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * International format without +, e.g. 27823210455.
+     */
+    whatsappNumber?: string | null;
+    whatsappMessage?: string | null;
+  };
+  hours?:
+    | {
+        day?: string | null;
+        open?: string | null;
+        close?: string | null;
+        closed?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  location?: {
+    mapEmbedUrl?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+  };
+  finance?: {
+    /**
+     * Annual interest rate %, e.g. 11.75. PLACEHOLDER until client confirms.
+     */
+    defaultRate?: number | null;
+    defaultTermMonths?: number | null;
+    defaultDepositPercent?: number | null;
+    disclaimer?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  header?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  headerCta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  footerColumns?:
+    | {
+        heading?: string | null;
+        links?:
+          | {
+              label: string;
+              url: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  dealershipName?: T;
+  legalName?: T;
+  tagline?: T;
+  hideSoldVehicles?: T;
+  contact?:
+    | T
+    | {
+        street?: T;
+        suburb?: T;
+        city?: T;
+        postalCode?: T;
+        email?: T;
+        phones?:
+          | T
+          | {
+              label?: T;
+              number?: T;
+              id?: T;
+            };
+        whatsappNumber?: T;
+        whatsappMessage?: T;
+      };
+  hours?:
+    | T
+    | {
+        day?: T;
+        open?: T;
+        close?: T;
+        closed?: T;
+        id?: T;
+      };
+  location?:
+    | T
+    | {
+        mapEmbedUrl?: T;
+        latitude?: T;
+        longitude?: T;
+      };
+  finance?:
+    | T
+    | {
+        defaultRate?: T;
+        defaultTermMonths?: T;
+        defaultDepositPercent?: T;
+        disclaimer?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  header?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  headerCta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  footerColumns?:
+    | T
+    | {
+        heading?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

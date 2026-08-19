@@ -23,7 +23,7 @@ const run = async () => {
 
   const user = await payload.create({
     collection: "users",
-    data: { email, password, name: "Amico Admin" },
+    data: { email, password, name: "Amico Admin", roles: ["admin"] },
   });
 
   payload.logger.info(`Created admin user: ${user.email}`);

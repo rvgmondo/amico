@@ -3,23 +3,36 @@ import { fileURLToPath } from "url";
 
 import type { CollectionConfig } from "payload";
 
+import { anyone, isAdminOrEditor } from "../access/access";
+
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Uploaded media (vehicle photography, blog imagery, team photos).
  *
- * Files are written to the project-root `media/` directory in local dev.
- * Alt text is required for accessibility (WCAG 2.2 AA) and doubles as SEO signal.
- * Image sizes are expanded in Phase 2 once the gallery/card aspect ratios are set.
+ * Files are written to the project-root `media/` directory in local dev. Alt
+ * text is required for accessibility (WCAG 2.2 AA) and doubles as an SEO signal.
+ * Named image sizes back the responsive cards, galleries and OG images so the
+ * frontend never ships an oversized original.
  */
 export const Media: CollectionConfig = {
   slug: "media",
   access: {
-    read: () => true,
+    read: anyone,
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    delete: isAdminOrEditor,
   },
   upload: {
     staticDir: path.resolve(dirname, "../../media"),
     mimeTypes: ["image/*"],
+    focalPoint: true,
+    imageSizes: [
+      { name: "thumbnail", width: 400, height: 300, position: "centre" },
+      { name: "card", width: 768, height: 512, position: "centre" },
+      { name: "feature", width: 1280, height: 853, position: "centre" },
+      { name: "og", width: 1200, height: 630, position: "centre" },
+    ],
   },
   fields: [
     {
