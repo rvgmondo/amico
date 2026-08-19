@@ -1,24 +1,178 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* -------------------------------------------------------------------------
- * Phase 1 base styles. A full brand design-token system (colour scales,
- * light/dark themes, spacing, typography scale) is built in Phase 3.
+/* Class-based dark mode (next-themes sets .dark on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+ * Amico Motors brand tokens.
+ * Elevated from the real identity: deep navy as the anchor, a rich gold accent
+ * used sparingly, red reserved for sale/alert states. Warm neutral greys.
  * ------------------------------------------------------------------------- */
-
 :root {
   --background: #ffffff;
-  --foreground: #12131a;
+  --foreground: #14161d;
+  --card: #ffffff;
+  --card-foreground: #14161d;
+  --popover: #ffffff;
+  --popover-foreground: #14161d;
+  --muted: #f4f5f8;
+  --muted-foreground: #565c6e;
+  --subtle: #fafbfc;
+  --border: #e4e6ee;
+  --input: #e4e6ee;
+
+  --primary: #1a2557; /* navy */
+  --primary-foreground: #ffffff;
+  --primary-hover: #141d47;
+
+  --secondary: #f4f5f8;
+  --secondary-foreground: #1a2557;
+
+  --accent: #e7a400; /* gold */
+  --accent-foreground: #14161d;
+  --accent-hover: #cf9200;
+  --gold-bright: #ffc62b;
+
+  --destructive: #c81e1e; /* sale / error */
+  --destructive-foreground: #ffffff;
+  --success: #1e7f4f;
+
+  --ring: #1a2557;
+
+  --surface-navy: #1a2557;
+  --surface-navy-foreground: #eef0fb;
+  --surface-navy-muted: #9aa2cf;
+
+  --radius: 0.7rem;
+  --shadow-card: 0 1px 2px rgba(20, 22, 29, 0.04), 0 8px 24px -12px rgba(20, 22, 29, 0.14);
+  --shadow-lift: 0 2px 4px rgba(20, 22, 29, 0.05), 0 18px 40px -16px rgba(20, 22, 29, 0.22);
+}
+
+.dark {
+  --background: #0b0d15;
+  --foreground: #eceef6;
+  --card: #12141f;
+  --card-foreground: #eceef6;
+  --popover: #12141f;
+  --popover-foreground: #eceef6;
+  --muted: #191c2a;
+  --muted-foreground: #9aa0b4;
+  --subtle: #10121c;
+  --border: #242838;
+  --input: #2a2e40;
+
+  --primary: #4453c4;
+  --primary-foreground: #ffffff;
+  --primary-hover: #5563d6;
+
+  --secondary: #191c2a;
+  --secondary-foreground: #eceef6;
+
+  --accent: #f0b429;
+  --accent-foreground: #14161d;
+  --accent-hover: #ffc62b;
+  --gold-bright: #ffc62b;
+
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+  --success: #35b37e;
+
+  --ring: #6b78e0;
+
+  --surface-navy: #12141f;
+  --surface-navy-foreground: #eceef6;
+  --surface-navy-muted: #8f96b8;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 18px 40px -16px rgba(0, 0, 0, 0.7);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-gold-bright: var(--gold-bright);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-ring: var(--ring);
+  --color-surface-navy: var(--surface-navy);
+  --color-surface-navy-foreground: var(--surface-navy-foreground);
+  --color-surface-navy-muted: var(--surface-navy-muted);
+
+  --font-display: var(--font-display), "Montserrat", system-ui, sans-serif;
+  --font-body: var(--font-body), "Open Sans", system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), "Open Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display), "Montserrat", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Respect reduced-motion everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, ::before, ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Utility: subtle top-to-bottom fade used behind hero imagery. */
+.bg-navy-gradient {
+  background-image: linear-gradient(135deg, #1a2557 0%, #101636 100%);
 }
