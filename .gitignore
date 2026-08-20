@@ -48,5 +48,9 @@ next-env.d.ts
 # Payload uploaded media (local disk storage)
 /media/
 
+# cPanel deploy artifacts (generated — see DEPLOY-CPANEL.md)
+/deploy/*.zip
+/deploy/*.sql
+
 # OS / editor
 Thumbs.db
