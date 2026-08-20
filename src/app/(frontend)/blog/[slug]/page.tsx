@@ -65,7 +65,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <Container className="flex max-w-3xl flex-col gap-6">
           <header className="flex flex-col gap-3">
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              {category ? <span className="font-semibold text-accent">{category.title}</span> : null}
+              {category ? <span className="font-semibold text-accent-ink">{category.title}</span> : null}
               {post.publishedDate ? <span>{formatDate(post.publishedDate)}</span> : null}
             </div>
             <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{post.title}</h1>

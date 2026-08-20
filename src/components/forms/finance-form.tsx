@@ -138,7 +138,7 @@ export function FinanceForm({ vehicleTitle }: { vehicleTitle?: string }) {
         <span className="text-muted-foreground">
           I agree to Amico Motors contacting me about vehicle finance and processing my details per
           the{" "}
-          <a href="/privacy" className="text-accent underline">
+          <a href="/privacy" className="text-accent-ink underline">
             Privacy Policy
           </a>{" "}
           (POPIA).

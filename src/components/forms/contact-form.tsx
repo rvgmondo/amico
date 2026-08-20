@@ -87,7 +87,7 @@ export function ContactForm() {
         <input type="checkbox" className="mt-0.5 size-4" style={{ accentColor: "var(--accent)" }} {...register("consent")} />
         <span className="text-muted-foreground">
           I agree to Amico Motors processing my details per the{" "}
-          <a href="/privacy" className="text-accent underline">
+          <a href="/privacy" className="text-accent-ink underline">
             Privacy Policy
           </a>{" "}
           (POPIA).

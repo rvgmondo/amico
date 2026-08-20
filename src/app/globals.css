@@ -29,9 +29,10 @@
   --secondary: #f4f5f8;
   --secondary-foreground: #1a2557;
 
-  --accent: #e7a400; /* gold */
+  --accent: #e7a400; /* gold — for fills, icons, and text on dark surfaces */
   --accent-foreground: #14161d;
   --accent-hover: #cf9200;
+  --accent-ink: #946400; /* darker gold — for gold TEXT on light surfaces (WCAG AA) */
   --gold-bright: #ffc62b;
 
   --destructive: #c81e1e; /* sale / error */
@@ -72,6 +73,7 @@
   --accent: #f0b429;
   --accent-foreground: #14161d;
   --accent-hover: #ffc62b;
+  --accent-ink: #f0b429; /* on dark surfaces the bright gold already passes AA */
   --gold-bright: #ffc62b;
 
   --destructive: #e5484d;
@@ -108,6 +110,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
   --color-gold-bright: var(--gold-bright);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);

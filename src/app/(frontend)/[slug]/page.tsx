@@ -77,7 +77,7 @@ async function AboutExtras() {
                     </div>
                     <div>
                       <h3 className="font-display font-bold">{m.name}</h3>
-                      {m.role ? <p className="text-sm text-accent">{m.role}</p> : null}
+                      {m.role ? <p className="text-sm text-accent-ink">{m.role}</p> : null}
                     </div>
                     {m.bio ? <p className="text-sm text-muted-foreground">{m.bio}</p> : null}
                   </div>

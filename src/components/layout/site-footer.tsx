@@ -32,7 +32,7 @@ export function SiteFooter({
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition-[filter] hover:brightness-95"
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-[#0B8457] px-4 py-2 text-sm font-semibold text-white transition-[filter] hover:brightness-95"
             >
               <MessageCircle className="size-4" /> Chat on WhatsApp
             </a>

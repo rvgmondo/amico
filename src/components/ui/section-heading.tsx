@@ -6,7 +6,7 @@ export function Eyebrow({ children, className }: { children: React.ReactNode; cl
   return (
     <span
       className={cn(
-        "inline-block font-display text-xs font-bold uppercase tracking-[0.18em] text-accent",
+        "inline-block font-display text-xs font-bold uppercase tracking-[0.18em] text-accent-ink",
         className,
       )}
     >

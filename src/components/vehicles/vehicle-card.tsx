@@ -79,7 +79,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
             <span className="font-display text-xl font-extrabold tracking-tight text-primary dark:text-foreground">
               {formatPrice(vehicle.price)}
             </span>
-            <span className="text-xs font-medium text-accent opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="text-xs font-medium text-accent-ink opacity-0 transition-opacity group-hover:opacity-100">
               View details →
             </span>
           </div>

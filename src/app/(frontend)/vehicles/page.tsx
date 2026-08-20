@@ -74,7 +74,7 @@ export default async function VehiclesPage({
     <>
       <section className="border-b border-border bg-subtle">
         <Container className="py-10">
-          <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-accent">
+          <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-accent-ink">
             Our vehicles
           </p>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">

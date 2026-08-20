@@ -144,7 +144,7 @@ export function EnquiryForm({
         />
         <span className="text-muted-foreground">
           I agree that Amico Motors may contact me about this enquiry and process my details per the{" "}
-          <a href="/privacy" className="text-accent underline">
+          <a href="/privacy" className="text-accent-ink underline">
             Privacy Policy
           </a>{" "}
           (POPIA).

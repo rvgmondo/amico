@@ -228,7 +228,7 @@ export default async function VehicleDetailPage({
                   <span className="font-semibold text-foreground">
                     {formatPrice(monthly)}/mo
                   </span>{" "}
-                  <Link href="/finance#calculator" className="text-accent hover:underline">
+                  <Link href="/finance#calculator" className="text-accent-ink hover:underline">
                     (estimate)
                   </Link>
                 </p>

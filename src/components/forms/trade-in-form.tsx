@@ -103,7 +103,7 @@ export function TradeInForm() {
       <HoneypotField {...register(HONEYPOT)} />
 
       <fieldset className="grid gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-display text-sm font-bold uppercase tracking-wider text-accent">
+        <legend className="mb-2 font-display text-sm font-bold uppercase tracking-wider text-accent-ink">
           Your details
         </legend>
         <Field label="Name" htmlFor="t-name" required error={errors.name?.message}>
@@ -118,7 +118,7 @@ export function TradeInForm() {
       </fieldset>
 
       <fieldset className="grid gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-display text-sm font-bold uppercase tracking-wider text-accent">
+        <legend className="mb-2 font-display text-sm font-bold uppercase tracking-wider text-accent-ink">
           Your car
         </legend>
         <Field label="Make" htmlFor="t-make" required error={errors.make?.message}>
@@ -189,7 +189,7 @@ export function TradeInForm() {
         <input type="checkbox" className="mt-0.5 size-4" style={{ accentColor: "var(--accent)" }} {...register("consent")} />
         <span className="text-muted-foreground">
           I agree to Amico Motors contacting me about this valuation and processing my details per the{" "}
-          <a href="/privacy" className="text-accent underline">
+          <a href="/privacy" className="text-accent-ink underline">
             Privacy Policy
           </a>{" "}
           (POPIA).

@@ -58,7 +58,7 @@ export function SiteHeader({
           className="flex items-baseline gap-1 rounded-sm font-display text-xl font-extrabold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <span className="text-primary dark:text-foreground">Amico</span>
-          <span className="text-accent">Motors</span>
+          <span className="text-accent-ink dark:text-accent">Motors</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">

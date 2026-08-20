@@ -74,7 +74,7 @@ export function FiltersPanel({
           <Link
             href="/vehicles"
             onClick={onNavigate}
-            className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent-ink hover:underline"
           >
             <X className="size-3.5" /> Clear all
           </Link>
