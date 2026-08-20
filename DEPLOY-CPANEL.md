@@ -54,10 +54,12 @@ Generate a secret locally: `node -e "console.log(require('crypto').randomBytes(3
 Copy the "Enter to the virtual environment" command from the Node App screen (or use
 Terminal), then:
 ```
-npm install
+npm install --include=dev
 npm run build
 ```
-- `npm install` compiles the correct Linux binaries (`sharp`, the SQLite client).
+- Use `--include=dev` — because `NODE_ENV=production` is set, a plain `npm install`
+  skips the build tools (Tailwind, TypeScript) and the build fails.
+- `npm install` also compiles the correct Linux binaries (`sharp`, the SQLite client).
 - `npm run build` produces the production build.
 
 If `npm run build` is **killed** (shared-hosting memory limit), see Troubleshooting.
