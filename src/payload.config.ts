@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import type { GenerateTitle } from "@payloadcms/plugin-seo/types";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
@@ -67,6 +68,19 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || "",
     },
   }),
+  // Only configure SMTP when provided; otherwise Payload logs emails to the console.
+  email: process.env.SMTP_HOST
+    ? nodemailerAdapter({
+        defaultFromAddress:
+          process.env.EMAIL_FROM?.match(/<(.+)>/)?.[1] || "noreply@amicomotors.co.za",
+        defaultFromName: "Amico Motors",
+        transportOptions: {
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT || 587),
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        },
+      })
+    : undefined,
   sharp,
   plugins: [
     seoPlugin({

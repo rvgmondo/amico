@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { getPayload } from "payload";
 
+import type { FacetRow } from "@/lib/vehicle-query";
 import type { Media, Vehicle } from "@/payload-types";
 
 /** Request-scoped Payload Local API client. */
@@ -130,3 +131,114 @@ export const getMakeFacets = unstable_cache(
   ["make-facets"],
   { revalidate: 300 },
 );
+
+/** Lightweight facet source: all available vehicles' filterable fields. */
+export const getFacetSource = unstable_cache(
+  async (): Promise<FacetRow[]> => {
+    const payload = await getClient();
+    const res = await payload.find({
+      collection: "vehicles",
+      where: { status: { not_equals: "sold" } },
+      depth: 1,
+      limit: 1000,
+      pagination: false,
+    });
+    return res.docs.map((v) => {
+      const make = typeof v.make === "object" && v.make ? v.make : null;
+      return {
+        makeSlug: make?.slug ?? String(make?.id ?? ""),
+        makeName: make?.name ?? "Other",
+        body: v.bodyType ?? null,
+        fuel: v.fuelType ?? null,
+        transmission: v.transmission ?? null,
+        price: v.price ?? null,
+        year: v.year ?? null,
+      };
+    });
+  },
+  ["facet-source"],
+  { revalidate: 120 },
+);
+
+export const getMakeBySlug = cache(async (slug: string) => {
+  if (!slug) return null;
+  const payload = await getClient();
+  const res = await payload.find({ collection: "makes", where: { slug: { equals: slug } }, limit: 1 });
+  return res.docs[0] ?? null;
+});
+
+// --- Pages, posts, team ---
+
+export const getPageBySlug = cache(async (slug: string) => {
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "pages",
+    where: { and: [{ slug: { equals: slug } }, { _status: { equals: "published" } }] },
+    depth: 1,
+    limit: 1,
+  });
+  return res.docs[0] ?? null;
+});
+
+export async function getPublishedPageSlugs(): Promise<string[]> {
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "pages",
+    where: { _status: { equals: "published" } },
+    limit: 100,
+    depth: 0,
+  });
+  return res.docs.map((d) => d.slug).filter((s): s is string => Boolean(s));
+}
+
+export const getTeam = cache(async () => {
+  const payload = await getClient();
+  const res = await payload.find({ collection: "team", sort: "order", limit: 50, depth: 1 });
+  return res.docs;
+});
+
+export const getPosts = cache(async (limit = 12) => {
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "posts",
+    where: { _status: { equals: "published" } },
+    sort: "-publishedDate",
+    depth: 1,
+    limit,
+  });
+  return res.docs;
+});
+
+export const getPostBySlug = cache(async (slug: string) => {
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "posts",
+    where: { and: [{ slug: { equals: slug } }, { _status: { equals: "published" } }] },
+    depth: 1,
+    limit: 1,
+  });
+  return res.docs[0] ?? null;
+});
+
+export async function getPublishedPostSlugs(): Promise<string[]> {
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "posts",
+    where: { _status: { equals: "published" } },
+    limit: 200,
+    depth: 0,
+  });
+  return res.docs.map((d) => d.slug).filter((s): s is string => Boolean(s));
+}
+
+export const getVehiclesByIds = async (ids: number[]) => {
+  if (!ids.length) return [];
+  const payload = await getClient();
+  const res = await payload.find({
+    collection: "vehicles",
+    where: { id: { in: ids } },
+    depth: 1,
+    limit: ids.length,
+  });
+  return res.docs;
+};

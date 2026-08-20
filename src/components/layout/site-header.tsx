@@ -1,7 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { Menu, MessageCircle, Phone, X } from "lucide-react";
+import { Heart, Menu, MessageCircle, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -9,7 +9,26 @@ import * as React from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { useFavourites } from "@/lib/favourites";
 import { cn } from "@/lib/utils";
+
+function SavedLink() {
+  const { count, ready } = useFavourites();
+  return (
+    <Link
+      href="/saved"
+      aria-label={`Saved vehicles${ready && count ? ` (${count})` : ""}`}
+      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    >
+      <Heart className="size-[18px]" />
+      {ready && count > 0 ? (
+        <span className="absolute -right-1 -top-1 inline-flex size-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+          {count}
+        </span>
+      ) : null}
+    </Link>
+  );
+}
 
 type NavLink = { label: string; url: string };
 
@@ -68,6 +87,7 @@ export function SiteHeader({
               {phone}
             </a>
           ) : null}
+          <SavedLink />
           <ThemeToggle className="hidden sm:inline-flex" />
           {cta ? (
             <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
