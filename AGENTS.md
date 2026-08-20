@@ -8,7 +8,9 @@ Pretoria. Goal: a fast, accessible, lead-generating site with a self-service CMS
 
 - **Next.js 15.4.11** — App Router, React 19, Server Components, TypeScript strict.
 - **Payload CMS 3.88** — installed into the same Next app (CMS + admin + auth + REST/GraphQL).
-- **PostgreSQL 17.5** — portable, runs from the project (see below).
+- **SQLite** (default) — a single file `amico.db`, no DB server. The config also
+  supports Postgres if `DATABASE_URI` is a `postgres://` URL (portable Postgres tooling
+  under `vendor/pgsql` + `scripts/db-*.ps1` remains for that path).
 - **Tailwind CSS v4** — CSS-first tokens in `src/app/globals.css`.
 - Motion, shadcn/ui, React Hook Form, Zod are added in later phases.
 
@@ -23,16 +25,18 @@ Pretoria. Goal: a fast, accessible, lead-generating site with a self-service CMS
    ```
 2. **`"type": "module"` is required** in package.json — Payload 3 is ESM-first; without
    it the config loader fails on top-level await.
-3. **Portable Postgres** lives in the project: binaries in `vendor/pgsql`, cluster data in
-   `.pgdata`, port **5433**. Both are gitignored. Managed by `scripts/db-*.ps1`.
+3. **Database is SQLite by default** (`DATABASE_URI=file:./amico.db`), created by the
+   seed. No DB server needed. Only if you set a `postgres://` URL do you need the
+   portable Postgres (`vendor/pgsql`, `.pgdata`, port 5433, via `scripts/db-*.ps1`).
 
 ## Running locally
 
 ```powershell
 $env:Path = "C:\CC\amico\vendor\node;$env:Path"
-npm run db:start   # start portable Postgres (also runs automatically before `dev`)
+npm run seed       # first time: creates amico.db + downloads vehicle photos
 npm run dev        # Next + Payload on http://localhost:3000
 ```
+(Only run `npm run db:start` first if you switched `DATABASE_URI` to Postgres.)
 
 - Public site: http://localhost:3000
 - Admin portal: http://localhost:3000/admin — dev login `admin@amicomotors.co.za` / `ChangeMe123!` (change before deploying).

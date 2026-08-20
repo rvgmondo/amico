@@ -11,6 +11,9 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const MAX_IMAGES = Number(process.env.SEED_MAX_IMAGES ?? 8);
 const LIMIT = process.env.SEED_LIMIT ? Number(process.env.SEED_LIMIT) : Infinity;
+// Optional local image cache (avoids re-downloading / rate limits). Point at a
+// folder of previously-downloaded originals, keyed by the source URL's filename.
+const IMAGE_CACHE = process.env.SEED_IMAGE_CACHE;
 
 type HarvestedVehicle = {
   slug: string;
@@ -182,14 +185,27 @@ function lexical(text: string): any {
 }
 
 async function downloadImage(url: string): Promise<{ data: Buffer; mimetype: string; name: string; size: number } | null> {
+  const ext = (url.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const mimetype = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+  const name = url.split("/").pop()?.split("?")[0] || `image.${ext}`;
+
+  // Prefer the local cache when available (no network).
+  if (IMAGE_CACHE) {
+    try {
+      const data = await readFile(path.join(IMAGE_CACHE, name));
+      return { data, mimetype, name, size: data.length };
+    } catch {
+      /* not cached — fall through to network */
+    }
+  }
+
   try {
-    const res = await fetch(url, { headers: { "user-agent": "AmicoSeed/1.0" } });
+    const ac = new AbortController();
+    const to = setTimeout(() => ac.abort(), 20000);
+    const res = await fetch(url, { headers: { "user-agent": "AmicoSeed/1.0" }, signal: ac.signal });
+    clearTimeout(to);
     if (!res.ok) return null;
-    const arrayBuffer = await res.arrayBuffer();
-    const data = Buffer.from(arrayBuffer);
-    const ext = (url.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const mimetype = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
-    const name = url.split("/").pop()?.split("?")[0] || `image.${ext}`;
+    const data = Buffer.from(await res.arrayBuffer());
     return { data, mimetype, name, size: data.length };
   } catch {
     return null;

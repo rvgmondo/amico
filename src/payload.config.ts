@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import type { GenerateTitle } from "@payloadcms/plugin-seo/types";
@@ -63,11 +64,11 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  db: postgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URI || "",
-    },
-  }),
+  // SQLite by default (a single file, ideal for cPanel and self-hosting).
+  // If DATABASE_URI is a postgres:// URL, use Postgres instead (e.g. Neon in prod).
+  db: (process.env.DATABASE_URI || "").startsWith("postgres")
+    ? postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI || "" } })
+    : sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./amico.db" } }),
   // Only configure SMTP when provided; otherwise Payload logs emails to the console.
   email: process.env.SMTP_HOST
     ? nodemailerAdapter({
