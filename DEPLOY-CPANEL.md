@@ -8,9 +8,14 @@ Everything you need is in the `deploy/` folder on your PC (`C:\CC\amico\deploy\`
 
 | File | What it is |
 |---|---|
-| `amico-source.zip` | The app (no node_modules / build). Extract into the app root. |
+| `amico-source.zip` | The app source (no node_modules / build). Extract into the app root. |
+| `next-build.zip` | The **pre-built app** (`.next/`). Extract into the app root. Lets you SKIP `npm run build` — essential on low-process-limit hosts. |
 | `amico.db` | The database: schema + all 97 seeded cars. Upload into the app root. |
 | `media.zip` | The vehicle photos. Extract so they land in `media/`. |
+
+> **Low process limit? (CloudLinux NPROC).** If `npm run build` fails with "unable to
+> fork" / the process count hits 100%, DON'T build on the server. Upload `next-build.zip`
+> (step 2), and in step 4 run **only** `npm install` — skip `npm run build` entirely.
 
 ---
 
