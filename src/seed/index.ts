@@ -153,7 +153,9 @@ function deriveDrivetrain(slug: string): string | undefined {
   return undefined;
 }
 
-function lexical(text: string) {
+// Returns a Payload lexical editor state. Typed loosely for the seed script.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lexical(text: string): any {
   const paragraphs = text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
   const blocks = paragraphs.length ? paragraphs : [text.trim() || " "];
   return {
@@ -472,7 +474,7 @@ async function seedVehicles(payload: Payload) {
     });
     const id = found.docs.length
       ? found.docs[0].id
-      : (await payload.create({ collection: "models", data: { name, make: makeId } })).id;
+      : (await payload.create({ collection: "models", data: { name, make: makeId as number } })).id;
     modelCache.set(key, id);
     return id;
   };
@@ -536,7 +538,7 @@ async function seedVehicles(payload: Payload) {
         images: imageIds,
         description: lexical(v.description || v.fullTitle),
         sourceUrl: v.sourceUrl,
-      },
+      } as never,
     });
     created++;
     if (created % 10 === 0) payload.logger.info(`  ...seeded ${created} vehicles`);

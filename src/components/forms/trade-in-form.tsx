@@ -76,7 +76,7 @@ export function TradeInForm() {
         condition: v.condition,
         expectedPrice: v.expectedPrice,
       },
-      [HONEYPOT]: (v as Record<string, string>)[HONEYPOT] || "",
+      [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
       toast.success("Thanks — we'll value your car and be in touch.");

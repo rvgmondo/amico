@@ -58,7 +58,7 @@ export function FinanceForm({ vehicleTitle }: { vehicleTitle?: string }) {
         monthlyIncome: v.income,
         depositAvailable: v.deposit,
       },
-      [HONEYPOT]: (v as Record<string, string>)[HONEYPOT] || "",
+      [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
       toast.success("Thanks — our finance team will contact you.");

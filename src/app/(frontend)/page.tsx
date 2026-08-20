@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Hero } from "@/components/home/hero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Stars } from "@/components/ui/stars";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
@@ -73,11 +74,11 @@ export default async function HomePage() {
               <Link href="/vehicles">View all stock</Link>
             </Button>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <Reveal className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((v, i) => (
               <VehicleCard key={v.id} vehicle={v} priority={i < 4} />
             ))}
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -158,7 +159,7 @@ export default async function HomePage() {
             eyebrow="What people say"
             title="Loved by our customers"
           />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Reveal className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t) => (
               <figure
                 key={t.id}
@@ -174,7 +175,7 @@ export default async function HomePage() {
                 </figcaption>
               </figure>
             ))}
-          </div>
+          </Reveal>
         </Container>
       </section>
 

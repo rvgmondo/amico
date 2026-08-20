@@ -43,7 +43,7 @@ export function ContactForm() {
       consent: v.consent,
       details: v.subject ? { subject: v.subject } : undefined,
       source: "/contact",
-      [HONEYPOT]: (v as Record<string, string>)[HONEYPOT] || "",
+      [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
       toast.success("Thanks — we'll be in touch shortly.");

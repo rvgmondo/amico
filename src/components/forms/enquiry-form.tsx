@@ -73,7 +73,7 @@ export function EnquiryForm({
       vehicleTitle: vehicle?.title,
       consent: values.consent,
       source: source || (typeof window !== "undefined" ? window.location.pathname : undefined),
-      [HONEYPOT]: (values as Record<string, string>)[HONEYPOT] || "",
+      [HONEYPOT]: String((values as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
       toast.success("Thanks — we'll be in touch shortly.");

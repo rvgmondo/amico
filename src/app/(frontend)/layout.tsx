@@ -21,6 +21,23 @@ export const metadata: Metadata = {
   },
   description:
     "Amico Motors (SA Multi Franchise Group) — a fine selection of quality used vehicles in Gezina, Pretoria, with easy bank finance and honest, friendly service.",
+  keywords: [
+    "used cars Pretoria",
+    "cars for sale Gezina",
+    "car finance South Africa",
+    "bakkies for sale Pretoria",
+    "trade in my car",
+    "Amico Motors",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "Amico Motors",
+    locale: "en_ZA",
+    title: "Amico Motors — Quality Used Cars in Pretoria",
+    description:
+      "A fine selection of quality used vehicles in Gezina, Pretoria, with easy bank finance and honest, friendly service.",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
@@ -31,6 +48,44 @@ export default async function FrontendLayout({ children }: { children: React.Rea
     : null;
   const phone = c?.phones?.[0]?.number ?? null;
 
+  const base = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AutoDealer",
+    name: settings.dealershipName || "Amico Motors",
+    description: settings.tagline || undefined,
+    url: base,
+    telephone: phone || undefined,
+    email: c?.email || undefined,
+    priceRange: "R",
+    areaServed: "Pretoria, Gauteng",
+    address: c?.street
+      ? {
+          "@type": "PostalAddress",
+          streetAddress: c.street,
+          addressLocality: c.suburb,
+          addressRegion: "Gauteng",
+          postalCode: c.postalCode,
+          addressCountry: "ZA",
+        }
+      : undefined,
+    geo: settings.location?.latitude
+      ? {
+          "@type": "GeoCoordinates",
+          latitude: settings.location.latitude,
+          longitude: settings.location.longitude,
+        }
+      : undefined,
+    openingHoursSpecification: settings.hours
+      ?.filter((h) => !h.closed && h.open && h.close)
+      .map((h) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: h.day,
+        opens: h.open,
+        closes: h.close,
+      })),
+  };
+
   return (
     <html
       lang="en"
@@ -38,6 +93,10 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       className={`${montserrat.variable} ${openSans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <a
             href="#main"

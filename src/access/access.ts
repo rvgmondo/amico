@@ -29,12 +29,14 @@ export const isAdminOrSelf: Access = ({ req: { user } }) => {
   return { id: { equals: user.id } };
 };
 
-/** Can this user open the admin panel at all? (Any assigned role.) */
-export const canAccessAdmin: Access = ({ req: { user } }) => rolesOf(user).length > 0;
+/** Admin-panel access must be boolean-only (no Where query). */
+export const canAccessAdmin = ({ req }: { req: { user?: unknown } }): boolean =>
+  rolesOf(req.user).length > 0;
 
 /** Public sees only published docs; editors/admins see everything (incl. drafts). */
 export const publishedOrEditor: Access = ({ req: { user } }) => {
-  if (isAdminOrEditor({ req: { user } } as Parameters<Access>[0])) return true;
+  const roles = rolesOf(user);
+  if (roles.includes("admin") || roles.includes("editor")) return true;
   return { _status: { equals: "published" } };
 };
 
