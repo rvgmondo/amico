@@ -9,10 +9,9 @@
 deployment:
   tasks:
     - export APPROOT=/home/mondocareco/amico.mondocare.co.za/amico
-    # Find the cPanel Node virtualenv bin rather than hardcoding it (it changes with
-    # the app root / Node version). Fall back to PATH npm.
-    - export NODEBIN=$(ls -d /home/mondocareco/nodevenv/*/*/bin 2>/dev/null | head -1)
-    - export NPM=$([ -x "$NODEBIN/npm" ] && echo "$NODEBIN/npm" || echo npm)
+    # Locate the cPanel Node virtualenv npm at any depth (the app-root path is
+    # nested, so a fixed glob misses it). Fall back to PATH npm.
+    - export NPM=$(find /home/mondocareco/nodevenv -maxdepth 5 -type f -name npm 2>/dev/null | head -1); export NPM=${NPM:-npm}
     # Replace app code + prebuilt output; leave node_modules, amico.db, media, tmp alone.
     - /bin/rm -rf $APPROOT/.next && /bin/cp -R .next $APPROOT/
     - /bin/rm -rf $APPROOT/src && /bin/cp -R src $APPROOT/
