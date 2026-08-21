@@ -89,7 +89,7 @@ export const SiteSettings: GlobalConfig = {
                 {
                   name: "defaultRate",
                   type: "number",
-                  admin: { description: "Annual interest rate %, e.g. 11.75. PLACEHOLDER until client confirms." },
+                  admin: { description: "Annual interest rate % used for the finance calculator estimate (e.g. 11.75). Update when the bank's rate changes." },
                 },
                 { name: "defaultTermMonths", type: "number", defaultValue: 72 },
                 { name: "defaultDepositPercent", type: "number", defaultValue: 10 },

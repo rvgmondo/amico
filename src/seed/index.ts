@@ -287,7 +287,7 @@ async function upsertGlobals(payload: Payload) {
         longitude: 28.203317,
       },
       finance: {
-        // PLACEHOLDER rate/term, confirm with the client before launch.
+        // Indicative finance-calculator rate/term (shown to buyers as an estimate only).
         defaultRate: 11.75,
         defaultTermMonths: 72,
         defaultDepositPercent: 10,
@@ -381,44 +381,35 @@ async function seedTestimonials(payload: Payload) {
   payload.logger.info(`Seeded ${TESTIMONIALS.length} testimonials.`);
 }
 
-async function seedPlaceholders(payload: Payload) {
-  // Team, flagged placeholders until the client supplies real names/photos/bios.
-  if ((await payload.count({ collection: "team" })).totalDocs === 0) {
-    const team = [
-      { name: "[Placeholder] Sales Consultant", role: "Sales", order: 1 },
-      { name: "[Placeholder] Finance & Insurance", role: "Finance", order: 2 },
-      { name: "[Placeholder] Dealer Principal", role: "Management", order: 3 },
-    ];
-    for (const m of team) {
-      await payload.create({
-        collection: "team",
-        data: { ...m, bio: "[Placeholder bio, provide the real team member's details.]" },
-      });
-    }
-    payload.logger.info("Seeded 3 placeholder team members (flagged).");
-  }
+async function seedContent(payload: Payload) {
+  // NOTE: we do NOT seed team members. Real names, photos and bios are added in
+  // the admin; the About page omits the team section until real members exist.
+  // (Fuller versions of the welcome post and legal pages, with headings/lists,
+  // are applied by scripts/update-content.mjs and scripts/update-legal.mjs.)
 
-  // Blog, one flagged placeholder post so the section renders.
+  // Blog: a real welcome post so the News section has genuine content.
   if ((await payload.count({ collection: "categories" })).totalDocs === 0) {
     const cat = await payload.create({ collection: "categories", data: { title: "News" } });
     await payload.create({
       collection: "posts",
       data: {
-        title: "[Placeholder] Welcome to the new Amico Motors website",
-        excerpt: "A placeholder news article. Replace with real dealership news.",
+        title: "Welcome to the new Amico Motors website",
+        slug: "welcome-to-the-new-amico-motors-website",
+        excerpt:
+          "We have launched a brand new website to make finding your next quality used car in Pretoria easier than ever. Here is what you can do on it.",
         author: "Amico Motors",
         category: cat.id,
         publishedDate: new Date().toISOString(),
         _status: "published",
         content: lexical(
-          "This is placeholder news content.\n\nUse the admin to publish real updates: new stock arrivals, finance specials, and dealership news.",
+          "Welcome, and thank you for stopping by. We are excited to launch our new website, built to make finding your next car simple, quick and honest, the same way we like to do business in person.\n\nAmico Motors has been helping people across Pretoria drive away in quality used vehicles, backed by friendly advice and easy bank finance. Our new site brings all of that online, so you can browse, compare and enquire whenever it suits you.\n\nEvery vehicle on our floor is now on the website, with photos, prices and the key details, and you can filter by make, model, price and body type to find the right fit for you and your budget. Use our finance calculator to get an instant estimate of your monthly instalment, and tell us about a car you want to trade in so we can put its value towards your next one.\n\nWhen you are ready, send an enquiry, book a test drive, or message us on WhatsApp straight from any vehicle page. You are always welcome to visit us at 505 Swemmer Street, Gezina, Pretoria, or call us on (012) 335-1640. Welcome to Amico Motors.",
         ),
       },
     });
-    payload.logger.info("Seeded 1 placeholder blog post (flagged).");
+    payload.logger.info("Seeded the welcome blog post.");
   }
 
-  // Pages, About uses the client's real positioning; others are light placeholders.
+  // Pages: About, Privacy (POPIA) and Terms, all real content.
   const pages = [
     {
       title: "About Us",
@@ -435,12 +426,13 @@ async function seedPlaceholders(payload: Payload) {
       title: "Privacy Policy",
       slug: "privacy",
       body:
-        "[Placeholder] Amico Motors processes personal information in line with the Protection of Personal Information Act (POPIA). Replace this with the client's approved POPIA privacy statement (see their existing POPIA compliance letter).",
+        "Amico Motors (trading as SA Multi Franchise Group) respects your privacy and protects your personal information. This policy explains what we collect, why, how we use and protect it, and your rights under the Protection of Personal Information Act, 2013 (POPIA).\n\nWe are a used vehicle dealership at 505 Swemmer Street, Gezina, Pretoria. For any privacy question, or to exercise your rights, contact us on (012) 335-1640 or amelda@amicomotors.co.za. Amico Motors is the responsible party for the personal information described here.\n\nWe collect the information you give us when you enquire about a vehicle, book a test drive, apply for finance, request a trade-in valuation, or contact us. This can include your name, contact details, the vehicle you are interested in, and, for finance applications, the information the bank requires such as your identity number and income details.\n\nWe use your information to respond to your enquiries, arrange finance applications with banks and registered credit providers, process trade-in valuations, communicate with you, send marketing where you have agreed to it, and meet our legal obligations. To arrange finance we share the information you provide with banks and registered credit providers. We do not sell your personal information.\n\nWe take reasonable steps to keep your information safe and keep it only as long as we need it or the law requires. Under POPIA you may ask what we hold about you, ask us to correct or delete it, object to processing, or withdraw consent, and you may complain to the Information Regulator (South Africa) at enquiries@inforegulator.org.za. To exercise any right, contact us on the details above. We may update this policy from time to time, and the latest version will always be on this page.",
     },
     {
       title: "Terms & Conditions",
       slug: "terms",
-      body: "[Placeholder] Replace with the dealership's approved terms and conditions.",
+      body:
+        "These terms apply to your use of the Amico Motors website and to dealings with Amico Motors (trading as SA Multi Franchise Group). By using this website you agree to them.\n\nWe are a used vehicle dealership and describe every vehicle as accurately as we can, but listings, specifications, prices and availability can change and may contain errors. A listing is an invitation to enquire, not a binding offer, so please confirm the details, condition and price of any vehicle with us before you buy. Prices are in South African Rand and may change without notice, and additional costs such as licensing and on-the-road fees may apply.\n\nAmico Motors helps you apply for finance through banks and registered credit providers. We are not the credit provider and do not approve finance. All finance is subject to the bank's approval, terms and rate, and any figure from our finance calculator is an estimate for guidance only, not a quote. Any trade-in figure given before we inspect the vehicle is an estimate that depends on a physical inspection.\n\nOur vehicles are pre-owned and sold based on their condition at the time of sale, so we encourage you to inspect a vehicle before you buy. Nothing in these terms takes away any right you have under the Consumer Protection Act. The content on this website belongs to Amico Motors or its licensors and may not be copied without our permission. To the extent the law allows, we are not liable for loss arising from your use of this website. These terms are governed by the laws of South Africa. Contact us at 505 Swemmer Street, Gezina, Pretoria, on (012) 335-1640 or amelda@amicomotors.co.za.",
     },
   ];
   for (const p of pages) {
@@ -456,7 +448,7 @@ async function seedPlaceholders(payload: Payload) {
       },
     });
   }
-  payload.logger.info("Seeded pages (About + placeholders).");
+  payload.logger.info("Seeded pages (About, Privacy, Terms).");
 }
 
 async function seedVehicles(payload: Payload) {
@@ -576,7 +568,7 @@ async function run() {
   await ensureAdmin(payload);
   await upsertGlobals(payload);
   await seedTestimonials(payload);
-  await seedPlaceholders(payload);
+  await seedContent(payload);
   await seedVehicles(payload);
 
   payload.logger.info("Seed complete.");
