@@ -14,10 +14,10 @@ deployment:
     - export NODEBIN=$(ls -d /home/mondocareco/nodevenv/*/*/bin 2>/dev/null | head -1)
     - export NPM=$([ -x "$NODEBIN/npm" ] && echo "$NODEBIN/npm" || echo npm)
     # Replace app code + prebuilt output; leave node_modules, amico.db, media, tmp alone.
-    - /bin/rm -rf $APPROOT/.next
-    - /bin/cp -R .next $APPROOT/
-    - /bin/rm -rf $APPROOT/src
-    - /bin/cp -R src public scripts $APPROOT/
+    - /bin/rm -rf $APPROOT/.next && /bin/cp -R .next $APPROOT/
+    - /bin/rm -rf $APPROOT/src && /bin/cp -R src $APPROOT/
+    - /bin/rm -rf $APPROOT/public && /bin/cp -R public $APPROOT/
+    - /bin/rm -rf $APPROOT/scripts && /bin/cp -R scripts $APPROOT/
     - /bin/cp -f package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs next-env.d.ts server.cjs $APPROOT/
     - cd $APPROOT && $NPM install --omit=dev --no-audit --no-fund
     # Restart the Passenger/LiteSpeed Node app.

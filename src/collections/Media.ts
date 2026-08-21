@@ -1,11 +1,8 @@
 import path from "path";
-import { fileURLToPath } from "url";
 
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
-
-const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Uploaded media (vehicle photography, blog imagery, team photos).
@@ -24,7 +21,9 @@ export const Media: CollectionConfig = {
     delete: isAdminOrEditor,
   },
   upload: {
-    staticDir: path.resolve(dirname, "../../media"),
+    // Anchor to the app root (server.cjs chdir's here), so it resolves correctly
+    // in the bundled production build, not relative to the compiled file location.
+    staticDir: path.resolve(process.cwd(), "media"),
     mimeTypes: ["image/*"],
     focalPoint: true,
     imageSizes: [

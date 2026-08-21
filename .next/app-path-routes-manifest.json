@@ -1,21 +1,21 @@
 {
+  "/_not-found/page": "/_not-found",
   "/robots.txt/route": "/robots.txt",
   "/apple-icon.png/route": "/apple-icon.png",
   "/sitemap.xml/route": "/sitemap.xml",
   "/icon.png/route": "/icon.png",
-  "/_not-found/page": "/_not-found",
   "/(payload)/api/[...slug]/route": "/api/[...slug]",
   "/(payload)/api/graphql/route": "/api/graphql",
   "/(payload)/api/graphql-playground/route": "/api/graphql-playground",
-  "/(payload)/admin/[[...segments]]/page": "/admin/[[...segments]]",
   "/(frontend)/page": "/",
   "/(frontend)/vehicles/[slug]/page": "/vehicles/[slug]",
   "/(frontend)/vehicles/page": "/vehicles",
-  "/(frontend)/[slug]/page": "/[slug]",
-  "/(frontend)/contact/page": "/contact",
-  "/(frontend)/saved/page": "/saved",
-  "/(frontend)/blog/page": "/blog",
   "/(frontend)/blog/[slug]/page": "/blog/[slug]",
+  "/(frontend)/contact/page": "/contact",
+  "/(frontend)/blog/page": "/blog",
+  "/(frontend)/[slug]/page": "/[slug]",
+  "/(frontend)/saved/page": "/saved",
+  "/(frontend)/finance/page": "/finance",
   "/(frontend)/sell-your-car/page": "/sell-your-car",
-  "/(frontend)/finance/page": "/finance"
+  "/(payload)/admin/[[...segments]]/page": "/admin/[[...segments]]"
 }
