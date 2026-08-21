@@ -35,6 +35,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Cloudflare fronts this site and caches /_next/static/* as immutable. This id is
+  // appended to every asset URL (?dpl=...), so a fresh build's assets are new URLs
+  // that miss CF's cache instead of serving a stale/truncated cached chunk. It is a
+  // literal (no env needed) so build and runtime always agree. BUMP this string on
+  // any deploy where you must force Cloudflare to re-fetch cached assets.
+  deploymentId: process.env.NEXT_DEPLOYMENT_ID || "d20260821-1",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "amicomotors.co.za" },
