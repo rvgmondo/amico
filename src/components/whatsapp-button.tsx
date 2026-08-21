@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 
-/** Floating WhatsApp contact button — their primary contact channel. */
+/** Floating WhatsApp contact button, their primary contact channel. */
 export function WhatsAppButton({ href }: { href: string }) {
   return (
     <a

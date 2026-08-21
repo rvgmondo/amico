@@ -2,6 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Heart, Menu, MessageCircle, Phone, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -55,10 +56,17 @@ export function SiteHeader({
       <Container className="flex h-16 items-center justify-between gap-4 lg:h-[70px]">
         <Link
           href="/"
-          className="flex items-baseline gap-1 rounded-sm font-display text-xl font-extrabold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          aria-label="Amico Motors home"
+          className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          <span className="text-primary dark:text-foreground">Amico</span>
-          <span className="text-accent-ink dark:text-accent">Motors</span>
+          <Image
+            src="/logo.png"
+            alt="Amico Motors"
+            width={877}
+            height={461}
+            priority
+            className="h-11 w-auto sm:h-12 dark:rounded-md dark:bg-white/95 dark:px-2 dark:py-1"
+          />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">

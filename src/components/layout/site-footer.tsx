@@ -87,7 +87,7 @@ export function SiteFooter({
             {settings.hours?.length ? (
               <span className="flex items-start gap-2">
                 <Clock className="mt-0.5 size-4 shrink-0 text-accent" />
-                <span>Mon–Fri 8:00–17:00 · Sat 8:00–13:00</span>
+                <span>Mon-Fri 8:00-17:00, Sat 8:00-13:00</span>
               </span>
             ) : null}
           </address>
@@ -98,7 +98,7 @@ export function SiteFooter({
         <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-surface-navy-muted sm:flex-row">
           <p>
             © {year} {settings.dealershipName || "Amico Motors"}
-            {settings.legalName ? ` · ${settings.legalName}` : ""}
+            {settings.legalName ? `, ${settings.legalName}` : ""}
           </p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-accent">

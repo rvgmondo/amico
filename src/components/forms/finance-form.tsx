@@ -61,7 +61,7 @@ export function FinanceForm({ vehicleTitle }: { vehicleTitle?: string }) {
       [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks — our finance team will contact you.");
+      toast.success("Thanks, our finance team will contact you.");
       reset();
     } else {
       toast.error(res.error);
@@ -111,9 +111,9 @@ export function FinanceForm({ vehicleTitle }: { vehicleTitle?: string }) {
           <select id="f-income" className={selectCls} defaultValue="" {...register("income")}>
             <option value="">Select</option>
             <option value="< R10 000">Under R10 000</option>
-            <option value="R10 000 – R20 000">R10 000 – R20 000</option>
-            <option value="R20 000 – R35 000">R20 000 – R35 000</option>
-            <option value="R35 000 – R50 000">R35 000 – R50 000</option>
+            <option value="R10 000 to R20 000">R10 000 to R20 000</option>
+            <option value="R20 000 to R35 000">R20 000 to R35 000</option>
+            <option value="R35 000 to R50 000">R35 000 to R50 000</option>
             <option value="R50 000+">R50 000+</option>
           </select>
         </Field>
@@ -151,7 +151,7 @@ export function FinanceForm({ vehicleTitle }: { vehicleTitle?: string }) {
       ) : null}
 
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-fit">
-        {isSubmitting ? "Sending…" : "Start finance application"}
+        {isSubmitting ? "Sending" : "Start finance application"}
       </Button>
     </form>
   );

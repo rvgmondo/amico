@@ -16,11 +16,11 @@ const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-body", displa
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000"),
   title: {
-    default: "Amico Motors — Quality Used Cars in Pretoria",
-    template: "%s — Amico Motors",
+    default: "Amico Motors: Quality Used Cars in Pretoria",
+    template: "%s | Amico Motors",
   },
   description:
-    "Amico Motors (SA Multi Franchise Group) — a fine selection of quality used vehicles in Gezina, Pretoria, with easy bank finance and honest, friendly service.",
+    "Amico Motors (SA Multi Franchise Group), a fine selection of quality used vehicles in Gezina, Pretoria, with easy bank finance and honest, friendly service.",
   keywords: [
     "used cars Pretoria",
     "cars for sale Gezina",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Amico Motors",
     locale: "en_ZA",
-    title: "Amico Motors — Quality Used Cars in Pretoria",
+    title: "Amico Motors: Quality Used Cars in Pretoria",
     description:
       "A fine selection of quality used vehicles in Gezina, Pretoria, with easy bank finance and honest, friendly service.",
   },

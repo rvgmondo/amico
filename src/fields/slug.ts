@@ -1,6 +1,6 @@
 import type { Field } from "payload";
 
-// Combining diacritical marks (U+0300–U+036F), stripped after NFKD normalisation.
+// Combining diacritical marks (U+0300-U+036F), stripped after NFKD normalisation.
 const DIACRITICS = /[̀-ͯ]/g;
 
 const slugify = (val: string): string =>

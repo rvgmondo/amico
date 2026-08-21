@@ -49,7 +49,7 @@ export async function generateMetadata({
     description: desc,
     alternates: { canonical: `/vehicles/${slug}` },
     openGraph: {
-      title: `${vehicle.title} — Amico Motors`,
+      title: `${vehicle.title} | Amico Motors`,
       description: desc,
       images: ogUrl ? [{ url: ogUrl, width: 1200, height: 630 }] : undefined,
       type: "website",

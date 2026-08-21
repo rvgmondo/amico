@@ -54,7 +54,7 @@ export default async function ContactPage() {
                   <li key={i} className="flex justify-between gap-6">
                     <span>{h.day}</span>
                     <span className="text-muted-foreground">
-                      {h.closed ? "Closed" : `${h.open}–${h.close}`}
+                      {h.closed ? "Closed" : `${h.open}-${h.close}`}
                     </span>
                   </li>
                 ))}

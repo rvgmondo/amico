@@ -5,7 +5,7 @@ import type { Access, FieldAccess } from "payload";
  *
  * Two roles: `admin` (full access, incl. user & settings management) and
  * `editor` (content + inventory, no user management). Access is enforced at the
- * collection and field level server-side — never rely on hiding admin UI alone.
+ * collection and field level server-side, never rely on hiding admin UI alone.
  */
 
 const rolesOf = (user: unknown): string[] =>

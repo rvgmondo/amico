@@ -40,7 +40,7 @@ export function SavedList() {
   }, [ids, ready]);
 
   if (!ready || vehicles === null) {
-    return <p className="py-16 text-center text-muted-foreground">Loading your saved vehicles…</p>;
+    return <p className="py-16 text-center text-muted-foreground">Loading your saved vehicles</p>;
   }
 
   if (!vehicles.length) {

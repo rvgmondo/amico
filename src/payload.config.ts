@@ -31,7 +31,7 @@ const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 const generateTitle: GenerateTitle = ({ doc }) => {
   const title = (doc as { title?: string })?.title;
-  return title ? `${title} — Amico Motors` : "Amico Motors";
+  return title ? `${title} | Amico Motors` : "Amico Motors";
 };
 
 export default buildConfig({
@@ -39,7 +39,7 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
-      titleSuffix: " — Amico Motors",
+      titleSuffix: " | Amico Motors",
     },
   },
   collections: [

@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "News",
-  description: "News and updates from Amico Motors — new stock, finance specials and dealership news.",
+  description: "News and updates from Amico Motors, new stock, finance specials and dealership news.",
   alternates: { canonical: "/blog" },
 };
 

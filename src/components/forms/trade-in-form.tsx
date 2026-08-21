@@ -79,7 +79,7 @@ export function TradeInForm() {
       [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks — we'll value your car and be in touch.");
+      toast.success("Thanks, we'll value your car and be in touch.");
       reset();
     } else {
       toast.error(res.error);
@@ -153,14 +153,14 @@ export function TradeInForm() {
         </Field>
         <Field label="Transmission" htmlFor="t-trans">
           <select id="t-trans" className={selectCls} defaultValue="" {...register("transmission")}>
-            <option value="">—</option>
+            <option value=""></option>
             <option value="Automatic">Automatic</option>
             <option value="Manual">Manual</option>
           </select>
         </Field>
         <Field label="Fuel" htmlFor="t-fuel">
           <select id="t-fuel" className={selectCls} defaultValue="" {...register("fuel")}>
-            <option value="">—</option>
+            <option value=""></option>
             <option value="Petrol">Petrol</option>
             <option value="Diesel">Diesel</option>
           </select>
@@ -170,7 +170,7 @@ export function TradeInForm() {
         </Field>
         <Field label="Condition" htmlFor="t-cond">
           <select id="t-cond" className={selectCls} defaultValue="" {...register("condition")}>
-            <option value="">—</option>
+            <option value=""></option>
             <option value="Excellent">Excellent</option>
             <option value="Good">Good</option>
             <option value="Average">Average</option>
@@ -202,7 +202,7 @@ export function TradeInForm() {
       ) : null}
 
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-fit">
-        {isSubmitting ? "Sending…" : "Request a valuation"}
+        {isSubmitting ? "Sending" : "Request a valuation"}
       </Button>
     </form>
   );

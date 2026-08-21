@@ -37,7 +37,7 @@ export function Hero({
           </h1>
           <p className="max-w-xl text-pretty text-lg text-white/80">
             A fine selection of quality used vehicles in Gezina, Pretoria. Honest advice, easy
-            bank finance, and no pressure — just help finding the right car for your needs and your
+            bank finance, and no pressure, just help finding the right car for your needs and your
             pocket.
           </p>
           <div className="flex flex-wrap items-center gap-3">

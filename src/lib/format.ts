@@ -20,7 +20,7 @@ export const formatDate = (value?: string | Date | null): string => {
 
 /**
  * Flat monthly instalment estimate (amortised) for the finance calculator.
- * Not a quote — display with the "estimate only" disclaimer.
+ * Not a quote, display with the "estimate only" disclaimer.
  */
 export const monthlyInstalment = (
   principal: number,

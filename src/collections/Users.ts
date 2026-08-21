@@ -6,8 +6,8 @@ import { canAccessAdmin, isAdmin, isAdminFieldLevel, isAdminOrSelf } from "../ac
  * Staff accounts for the admin portal.
  *
  * Roles:
- *  - `admin`  — full access, incl. user management and site settings.
- *  - `editor` — content + inventory, no user management, cannot change roles.
+ *  - `admin` , full access, incl. user management and site settings.
+ *  - `editor`, content + inventory, no user management, cannot change roles.
  *
  * Access is enforced server-side at the collection and field level.
  */

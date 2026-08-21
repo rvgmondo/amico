@@ -76,7 +76,7 @@ export function EnquiryForm({
       [HONEYPOT]: String((values as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks — we'll be in touch shortly.");
+      toast.success("Thanks, we'll be in touch shortly.");
       reset();
       onSuccess?.();
     } else {
@@ -157,7 +157,7 @@ export function EnquiryForm({
       ) : null}
 
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Sending…" : isTestDrive ? "Book test drive" : "Send enquiry"}
+        {isSubmitting ? "Sending" : isTestDrive ? "Book test drive" : "Send enquiry"}
       </Button>
     </form>
   );

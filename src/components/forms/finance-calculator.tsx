@@ -107,7 +107,7 @@ export function FinanceCalculator({
           {formatPrice(monthly)}
         </span>
         <span className="text-xs text-white/60">
-          over {term} months at {rate.toFixed(2)}% · financing {formatPrice(principal)}
+          over {term} months at {rate.toFixed(2)}%, financing {formatPrice(principal)}
         </span>
       </div>
 

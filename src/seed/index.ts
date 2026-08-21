@@ -195,7 +195,7 @@ async function downloadImage(url: string): Promise<{ data: Buffer; mimetype: str
       const data = await readFile(path.join(IMAGE_CACHE, name));
       return { data, mimetype, name, size: data.length };
     } catch {
-      /* not cached — fall through to network */
+      /* not cached, fall through to network */
     }
   }
 
@@ -287,7 +287,7 @@ async function upsertGlobals(payload: Payload) {
         longitude: 28.203317,
       },
       finance: {
-        // PLACEHOLDER rate/term — confirm with the client before launch.
+        // PLACEHOLDER rate/term, confirm with the client before launch.
         defaultRate: 11.75,
         defaultTermMonths: 72,
         defaultDepositPercent: 10,
@@ -382,7 +382,7 @@ async function seedTestimonials(payload: Payload) {
 }
 
 async function seedPlaceholders(payload: Payload) {
-  // Team — flagged placeholders until the client supplies real names/photos/bios.
+  // Team, flagged placeholders until the client supplies real names/photos/bios.
   if ((await payload.count({ collection: "team" })).totalDocs === 0) {
     const team = [
       { name: "[Placeholder] Sales Consultant", role: "Sales", order: 1 },
@@ -392,13 +392,13 @@ async function seedPlaceholders(payload: Payload) {
     for (const m of team) {
       await payload.create({
         collection: "team",
-        data: { ...m, bio: "[Placeholder bio — provide the real team member's details.]" },
+        data: { ...m, bio: "[Placeholder bio, provide the real team member's details.]" },
       });
     }
     payload.logger.info("Seeded 3 placeholder team members (flagged).");
   }
 
-  // Blog — one flagged placeholder post so the section renders.
+  // Blog, one flagged placeholder post so the section renders.
   if ((await payload.count({ collection: "categories" })).totalDocs === 0) {
     const cat = await payload.create({ collection: "categories", data: { title: "News" } });
     await payload.create({
@@ -418,7 +418,7 @@ async function seedPlaceholders(payload: Payload) {
     payload.logger.info("Seeded 1 placeholder blog post (flagged).");
   }
 
-  // Pages — About uses the client's real positioning; others are light placeholders.
+  // Pages, About uses the client's real positioning; others are light placeholders.
   const pages = [
     {
       title: "About Us",
@@ -520,7 +520,7 @@ async function seedVehicles(payload: Payload) {
       try {
         const media = await payload.create({
           collection: "media",
-          data: { alt: `${v.fullTitle} — photo` },
+          data: { alt: `${v.fullTitle}, photo` },
           file,
         });
         imageIds.push(media.id);

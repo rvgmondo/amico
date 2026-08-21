@@ -46,7 +46,7 @@ export function ContactForm() {
       [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks — we'll be in touch shortly.");
+      toast.success("Thanks, we'll be in touch shortly.");
       reset();
     } else {
       toast.error(res.error);
@@ -99,7 +99,7 @@ export function ContactForm() {
         </p>
       ) : null}
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-fit">
-        {isSubmitting ? "Sending…" : "Send message"}
+        {isSubmitting ? "Sending" : "Send message"}
       </Button>
     </form>
   );

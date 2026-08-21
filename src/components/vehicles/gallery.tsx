@@ -83,7 +83,7 @@ export function Gallery({ photos, title }: { photos: Photo[]; title: string }) {
               if (e.key === "ArrowLeft") go(-1);
             }}
           >
-            <Dialog.Title className="sr-only">{title} — photo gallery</Dialog.Title>
+            <Dialog.Title className="sr-only">{title} photo gallery</Dialog.Title>
             <div className="flex items-center justify-between p-4 text-white">
               <span className="text-sm font-medium">
                 {active + 1} / {photos.length}

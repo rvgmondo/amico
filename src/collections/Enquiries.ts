@@ -6,7 +6,7 @@ import { isAdmin, isAdminOrEditor } from "../access/access";
  * Captured leads: enquiries, test-drive bookings, finance applications,
  * trade-in valuations and contact messages.
  *
- * Security: public REST `create` is DISABLED — submissions come only through
+ * Security: public REST `create` is DISABLED, submissions come only through
  * the site's server actions (validated + rate-limited + honeypot), which use
  * the Local API with elevated access. This prevents open spam against the API.
  * Only admins/editors can read leads; only admins can create (in-admin) or delete.

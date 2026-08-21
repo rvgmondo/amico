@@ -4,7 +4,7 @@ import config from "../payload.config";
 
 /**
  * Provisions the first admin account for local development.
- * Default credentials are for DEV ONLY — change them (or create a real user in
+ * Default credentials are for DEV ONLY, change them (or create a real user in
  * the admin UI) before any deployment. Idempotent: does nothing if users exist.
  *
  * Run: npm run seed:admin
@@ -27,7 +27,7 @@ const run = async () => {
   });
 
   payload.logger.info(`Created admin user: ${user.email}`);
-  payload.logger.info("DEV credentials — change before deploying.");
+  payload.logger.info("DEV credentials, change before deploying.");
   process.exit(0);
 };
 

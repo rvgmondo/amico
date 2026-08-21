@@ -136,7 +136,7 @@ export function FiltersPanel({
             defaultValue={filters.minPrice}
             onCommit={(n) => apply({ minPrice: n })}
           />
-          <span className="text-muted-foreground">–</span>
+          <span className="text-muted-foreground">-</span>
           <RangeInput
             aria-label="Maximum price"
             placeholder={formatPrice(facets.priceMax)}

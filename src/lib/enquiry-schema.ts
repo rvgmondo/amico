@@ -10,7 +10,7 @@ export const ENQUIRY_TYPES = [
 ] as const;
 export type EnquiryType = (typeof ENQUIRY_TYPES)[number];
 
-/** Honeypot field name — bots fill it, humans never see it. Must stay empty. */
+/** Honeypot field name, bots fill it, humans never see it. Must stay empty. */
 export const HONEYPOT = "company";
 
 /** Canonical server-side schema for any lead submission. */

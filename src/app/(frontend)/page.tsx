@@ -201,7 +201,7 @@ export default async function HomePage() {
               ) : null}
               <li className="flex items-start gap-3">
                 <Clock className="mt-0.5 size-5 text-accent" />
-                <span>Mon–Fri 8:00–17:00 · Sat 8:00–13:00 · Sun closed</span>
+                <span>Mon-Fri 8:00-17:00, Sat 8:00-13:00, Sun closed</span>
               </li>
             </ul>
             <div className="flex flex-wrap gap-3">
