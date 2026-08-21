@@ -13,8 +13,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# next.js — the production build (.next) IS committed for git deploy to cPanel
+# (the shared host cannot build reliably), but never the build cache.
+/.next/cache/
 /out/
 
 # production
@@ -59,8 +60,7 @@ next-env.d.ts
 /.imgcache/
 
 # cPanel deploy artifacts (generated — see DEPLOY-CPANEL.md)
-/deploy/*.zip
-/deploy/*.sql
+/deploy/
 
 # OS / editor
 Thumbs.db

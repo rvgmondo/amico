@@ -1,0 +1,20 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/(payload)/api/[...slug]/route": "/api/[...slug]",
+  "/(payload)/api/graphql-playground/route": "/api/graphql-playground",
+  "/(payload)/api/graphql/route": "/api/graphql",
+  "/(payload)/admin/[[...segments]]/page": "/admin/[[...segments]]",
+  "/(frontend)/vehicles/[slug]/page": "/vehicles/[slug]",
+  "/(frontend)/vehicles/page": "/vehicles",
+  "/(frontend)/page": "/",
+  "/(frontend)/contact/page": "/contact",
+  "/(frontend)/[slug]/page": "/[slug]",
+  "/(frontend)/finance/page": "/finance",
+  "/(frontend)/blog/[slug]/page": "/blog/[slug]",
+  "/(frontend)/saved/page": "/saved",
+  "/(frontend)/blog/page": "/blog",
+  "/(frontend)/sell-your-car/page": "/sell-your-car"
+}
