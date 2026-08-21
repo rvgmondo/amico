@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
@@ -21,8 +22,18 @@ export function SiteFooter({
     <footer className="mt-auto bg-surface-navy text-surface-navy-foreground">
       <Container className="grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="font-display text-2xl font-extrabold tracking-tight text-white">
-            Amico<span className="text-accent">Motors</span>
+          <Link
+            href="/"
+            aria-label="Amico Motors home"
+            className="w-fit rounded-lg bg-white px-3 py-2.5 shadow-sm"
+          >
+            <Image
+              src="/logo.png"
+              alt="Amico Motors"
+              width={877}
+              height={461}
+              className="h-11 w-auto"
+            />
           </Link>
           <p className="max-w-xs text-sm text-surface-navy-muted">
             {settings.tagline || "Quality used cars in Pretoria, with honest, friendly service."}
