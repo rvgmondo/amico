@@ -31,7 +31,8 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
   ...(isDev
     ? []
-    : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]),
+    : // No includeSubDomains/preload: other amicomotors.co.za hosts (mail at xneelo) are not ours.
+      [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]),
 ];
 
 const nextConfig: NextConfig = {
@@ -50,6 +51,17 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // TypeScript is the build-time quality gate; run ESLint separately via `npm run lint`.
   eslint: { ignoreDuringBuilds: true },
+  // The old WordPress site's addresses, so Google results and saved links still land.
+  async redirects() {
+    return [
+      { source: "/listings/:slug", destination: "/vehicles/:slug", permanent: true },
+      { source: "/listings", destination: "/vehicles", permanent: true },
+      { source: "/used-cars-pretoria/:path*", destination: "/vehicles", permanent: true },
+      { source: "/about-us", destination: "/about", permanent: true },
+      { source: "/finance-application", destination: "/finance", permanent: true },
+      { source: "/contact-us-2", destination: "/contact", permanent: true },
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
