@@ -73,11 +73,14 @@ export default buildConfig({
   email: process.env.SMTP_HOST
     ? nodemailerAdapter({
         defaultFromAddress:
-          process.env.EMAIL_FROM?.match(/<(.+)>/)?.[1] || "noreply@amicomotors.co.za",
+          process.env.EMAIL_FROM?.match(/<(.+)>/)?.[1] ||
+          process.env.EMAIL_FROM?.trim() ||
+          "noreply@amicomotors.co.za",
         defaultFromName: "Amico Motors",
         transportOptions: {
           host: process.env.SMTP_HOST,
           port: Number(process.env.SMTP_PORT || 587),
+          secure: Number(process.env.SMTP_PORT) === 465,
           auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
         },
       })
