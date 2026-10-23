@@ -20,4 +20,5 @@ tar czf - .next package.json package-lock.json next.config.ts tsconfig.json post
   | ssh -o ServerAliveInterval=15 amico-prod 'cd ~/amico && rm -rf .next public && tar xzf - && cloudlinux-selector restart --json --interpreter nodejs --app-root amico'
 
 git checkout -- .next && git clean -fdq .next
-curl -s -o /dev/null -w "amicomotors.co.za: %{http_code}\n" --max-time 90 https://amicomotors.co.za/
+# Test the new server directly, whatever DNS currently says. -k until AutoSSL has run.
+curl -sk --resolve amicomotors.co.za:443:85.187.142.78 -o /dev/null -w "new server: %{http_code}\n" --max-time 90 https://amicomotors.co.za/
