@@ -153,6 +153,7 @@ export const getFacetSource = unstable_cache(
         transmission: v.transmission ?? null,
         price: v.price ?? null,
         year: v.year ?? null,
+        mileage: v.mileage ?? null,
       };
     });
   },

@@ -7,6 +7,7 @@ import { FiltersPanel } from "@/components/vehicles/filters-panel";
 import { Pagination } from "@/components/vehicles/pagination";
 import { SortSelect } from "@/components/vehicles/sort-select";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
+import { formatKm } from "@/lib/format";
 import { getClient, getFacetSource, getMakeBySlug } from "@/lib/payload";
 import {
   buildWhere,
@@ -30,7 +31,7 @@ export async function generateMetadata({
   return {
     title,
     description:
-      "Browse Amico Motors' full selection of quality used vehicles in Gezina, Pretoria. Filter by make, body type, price, year, fuel and transmission.",
+      "Browse Amico Motors' full selection of quality used vehicles in Gezina, Pretoria. Filter by make, body type, price, year, mileage, fuel and transmission.",
     alternates: { canonical: "/vehicles" },
   };
 }
@@ -66,6 +67,7 @@ export default async function VehiclesPage({
     (filters.maxPrice != null ? 1 : 0) +
     (filters.minYear != null ? 1 : 0) +
     (filters.maxYear != null ? 1 : 0) +
+    (filters.maxMileage != null ? 1 : 0) +
     (filters.q ? 1 : 0);
 
   const chips = buildChips(filters, make?.name);
@@ -190,6 +192,12 @@ function buildChips(filters: ReturnType<typeof parseVehicleFilters>, makeName?: 
     chips.push({ key: "minYear", label: `From ${filters.minYear}`, query: without({ minYear: undefined }) });
   if (filters.maxYear != null)
     chips.push({ key: "maxYear", label: `To ${filters.maxYear}`, query: without({ maxYear: undefined }) });
+  if (filters.maxMileage != null)
+    chips.push({
+      key: "maxMileage",
+      label: `Up to ${formatKm(filters.maxMileage)}`,
+      query: without({ maxMileage: undefined }),
+    });
   if (filters.q) chips.push({ key: "q", label: `"${filters.q}"`, query: without({ q: "" }) });
   return chips;
 }

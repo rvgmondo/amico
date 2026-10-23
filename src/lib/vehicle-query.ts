@@ -11,6 +11,7 @@ export type VehicleFilters = {
   maxPrice?: number;
   minYear?: number;
   maxYear?: number;
+  maxMileage?: number;
   q: string;
   sort: string;
   page: number;
@@ -61,6 +62,7 @@ export function parseVehicleFilters(sp: SearchParams): VehicleFilters {
     maxPrice: int(sp.maxPrice),
     minYear: int(sp.minYear),
     maxYear: int(sp.maxYear),
+    maxMileage: int(sp.maxMileage),
     q: first(sp.q) ?? "",
     sort: first(sp.sort) ?? "newest",
     page: Math.max(1, int(sp.page) ?? 1),
@@ -78,6 +80,7 @@ export function buildWhere(filters: VehicleFilters, makeId?: number | string | n
   if (filters.maxPrice != null) and.push({ price: { less_than_equal: filters.maxPrice } });
   if (filters.minYear != null) and.push({ year: { greater_than_equal: filters.minYear } });
   if (filters.maxYear != null) and.push({ year: { less_than_equal: filters.maxYear } });
+  if (filters.maxMileage != null) and.push({ mileage: { less_than_equal: filters.maxMileage } });
   if (filters.q) and.push({ title: { like: filters.q } });
   return { and };
 }
@@ -95,6 +98,7 @@ export function filtersToQuery(filters: Partial<VehicleFilters>): string {
   if (filters.maxPrice != null) p.set("maxPrice", String(filters.maxPrice));
   if (filters.minYear != null) p.set("minYear", String(filters.minYear));
   if (filters.maxYear != null) p.set("maxYear", String(filters.maxYear));
+  if (filters.maxMileage != null) p.set("maxMileage", String(filters.maxMileage));
   if (filters.q) p.set("q", filters.q);
   if (filters.sort && filters.sort !== "newest") p.set("sort", filters.sort);
   if (filters.page && filters.page > 1) p.set("page", String(filters.page));
@@ -111,7 +115,11 @@ export type FacetRow = {
   transmission?: string | null;
   price?: number | null;
   year?: number | null;
+  mileage?: number | null;
 };
+
+/** "Up to" bands for the mileage filter, in km. */
+export const MILEAGE_BANDS = [50000, 100000, 150000, 200000, 250000];
 
 const rowMatches = (row: FacetRow, f: VehicleFilters, ignore: keyof VehicleFilters): boolean => {
   if (ignore !== "make" && f.make && row.makeSlug !== f.make) return false;
@@ -127,6 +135,12 @@ const rowMatches = (row: FacetRow, f: VehicleFilters, ignore: keyof VehicleFilte
   if (ignore !== "maxPrice" && f.maxPrice != null && (row.price ?? 0) > f.maxPrice) return false;
   if (ignore !== "minYear" && f.minYear != null && (row.year ?? 0) < f.minYear) return false;
   if (ignore !== "maxYear" && f.maxYear != null && (row.year ?? 0) > f.maxYear) return false;
+  if (
+    ignore !== "maxMileage" &&
+    f.maxMileage != null &&
+    (row.mileage == null || row.mileage > f.maxMileage)
+  )
+    return false;
   return true;
 };
 
@@ -169,6 +183,12 @@ export function computeFacets(rows: FacetRow[], f: VehicleFilters) {
     count: transCounts.get(o.value) ?? 0,
   })).filter((o) => o.count > 0);
 
+  const mileageRows = rows.filter((r) => rowMatches(r, f, "maxMileage") && r.mileage != null);
+  const mileages = MILEAGE_BANDS.map((max) => ({
+    value: max,
+    count: mileageRows.filter((r) => (r.mileage as number) <= max).length,
+  }));
+
   const prices = rows.map((r) => r.price ?? 0).filter(Boolean);
   const years = rows.map((r) => r.year ?? 0).filter(Boolean);
 
@@ -177,6 +197,7 @@ export function computeFacets(rows: FacetRow[], f: VehicleFilters) {
     bodies,
     fuels,
     transmissions,
+    mileages,
     priceMin: prices.length ? Math.min(...prices) : 0,
     priceMax: prices.length ? Math.max(...prices) : 1000000,
     yearMin: years.length ? Math.min(...years) : 2000,

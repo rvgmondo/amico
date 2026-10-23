@@ -21,7 +21,8 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/index.ts",
     "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/create-admin.ts",
-    "harvest": "node scripts/harvest.mjs"
+    "harvest": "node scripts/harvest.mjs",
+    "sync:stock": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/sync-stock.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

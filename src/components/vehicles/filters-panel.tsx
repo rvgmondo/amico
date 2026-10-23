@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { Input } from "@/components/ui/input";
-import { formatPrice } from "@/lib/format";
+import { formatKm, formatPrice } from "@/lib/format";
 import { filtersToQuery, type VehicleFilters } from "@/lib/vehicle-query";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ type Facets = {
   bodies: { value: string; label: string; count: number }[];
   fuels: { value: string; label: string; count: number }[];
   transmissions: { value: string; label: string; count: number }[];
+  mileages: { value: number; count: number }[];
   priceMin: number;
   priceMax: number;
   yearMin: number;
@@ -64,6 +65,7 @@ export function FiltersPanel({
     (filters.maxPrice != null ? 1 : 0) +
     (filters.minYear != null ? 1 : 0) +
     (filters.maxYear != null ? 1 : 0) +
+    (filters.maxMileage != null ? 1 : 0) +
     (filters.q ? 1 : 0);
 
   return (
@@ -176,6 +178,25 @@ export function FiltersPanel({
             ))}
           </select>
         </div>
+      </FilterGroup>
+
+      {/* Mileage */}
+      <FilterGroup label="Mileage">
+        <select
+          value={filters.maxMileage ?? ""}
+          onChange={(e) =>
+            apply({ maxMileage: e.target.value ? Number(e.target.value) : undefined })
+          }
+          className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
+          aria-label="Maximum mileage"
+        >
+          <option value="">Any mileage</option>
+          {facets.mileages.map((m) => (
+            <option key={m.value} value={m.value} disabled={m.count === 0}>
+              Up to {formatKm(m.value)} ({m.count})
+            </option>
+          ))}
+        </select>
       </FilterGroup>
 
       {/* Fuel */}
