@@ -13,9 +13,10 @@
 # testing
 /coverage
 
-# next.js — the production build (.next) IS committed for git deploy to cPanel
-# (the shared host cannot build reliably), but never the build cache.
-/.next/cache/
+# next.js build output. Never commit it: the build embeds a per-build server-actions
+# encryption key (GitGuardian flagged it, 24 Oct 2026). Live deploys build locally and
+# ship over SSH with scripts/deploy-prod.sh.
+/.next/
 /out/
 
 # production

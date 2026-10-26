@@ -1,3 +1,6 @@
+# RETIRED (Oct 2026): this was the staging deploy (mondocareco). .next is no longer in git,
+# so "Deploy HEAD Commit" would fail at the .next copy. The live site deploys with
+# scripts/deploy-prod.sh (amicomotorsco account, over SSH).
 # cPanel Git Version Control deploy manifest.
 # Clicking "Deploy HEAD Commit" in cPanel runs these tasks: copy the prebuilt app
 # into place and restart the Node process. The build (.next) is committed to the

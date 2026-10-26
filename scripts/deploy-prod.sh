@@ -8,7 +8,6 @@
 # there unreliable), ships code + .next, restarts the Node app. It never touches amico.db,
 # media/ or node_modules. If dependencies change, run on the server:
 #   source ~/nodevenv/amico/20/bin/activate && cd ~/amico && npm ci --omit=dev --maxsockets 3
-# Afterwards the committed .next is restored, because the repo's .next is the staging build.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$PWD/vendor/node:$PATH"
@@ -19,6 +18,5 @@ NEXT_PUBLIC_SERVER_URL=https://amicomotors.co.za npm run build
 tar czf - .next package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs server.cjs public src scripts \
   | ssh -o ServerAliveInterval=15 amico-prod 'cd ~/amico && rm -rf .next public && tar xzf - && cloudlinux-selector restart --json --interpreter nodejs --app-root amico'
 
-git checkout -- .next && git clean -fdq .next
 # Test the new server directly, whatever DNS currently says. -k until AutoSSL has run.
 curl -sk --resolve amicomotors.co.za:443:85.187.142.78 -o /dev/null -w "new server: %{http_code}\n" --max-time 90 https://amicomotors.co.za/

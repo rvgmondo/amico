@@ -1,8 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /admin
-Disallow: /api/
-Disallow: /saved
-
-Host: https://amico.mondocare.co.za
-Sitemap: https://amico.mondocare.co.za/sitemap.xml
