@@ -18,7 +18,7 @@ const state = (blocks) => ({ root: { type: "root", format: "", indent: 0, versio
 const privacy = [
   p("Amico Motors (trading as SA Multi Franchise Group) respects your privacy and is committed to protecting your personal information. This policy explains what we collect, why we collect it, how we use and protect it, and the rights you have under the Protection of Personal Information Act, 2013 (POPIA)."),
   h("Who we are"),
-  p("Amico Motors is a used vehicle dealership at 505 Swemmer Street, Gezina, Pretoria. For any privacy question, or to exercise your rights, contact us on (012) 335-1640 or amelda@amicomotors.co.za. Amico Motors is the responsible party for the personal information described here."),
+  p("Amico Motors is a used vehicle dealership at 505 Swemmer Street, Gezina, Pretoria. For any privacy question, or to exercise your rights, contact us on 082 321 0455 or amelda@amicomotors.co.za. Amico Motors is the responsible party for the personal information described here."),
   h("Information we collect"),
   p("We collect the information you give us when you enquire about a vehicle, book a test drive, apply for finance, request a trade-in valuation, or contact us. This can include your name, phone number, email address, the vehicle you are interested in, and details of a vehicle you want to trade in. When you apply for vehicle finance we may also collect the information the bank requires, such as your identity number, employment and income details, and supporting documents."),
   p("We may also collect limited technical information when you use our website, such as your browser type and the pages you visit, to keep the site working and to improve it."),
@@ -45,7 +45,7 @@ const privacy = [
     "Object to our processing of your information, or withdraw consent you have given.",
     "Lodge a complaint with the Information Regulator of South Africa.",
   ]),
-  p("To exercise any of these rights, contact us on (012) 335-1640 or amelda@amicomotors.co.za."),
+  p("To exercise any of these rights, contact us on 082 321 0455 or amelda@amicomotors.co.za."),
   h("The Information Regulator"),
   p("If you are not satisfied with how we have handled your information, you may contact the Information Regulator (South Africa) at enquiries@inforegulator.org.za or complaints.IR@inforegulator.org.za."),
   h("Changes to this policy"),
@@ -71,7 +71,7 @@ const terms = [
   h("Governing law"),
   p("These terms are governed by the laws of South Africa."),
   h("Contact us"),
-  p("Amico Motors, 505 Swemmer Street, Gezina, Pretoria. Phone (012) 335-1640. Email amelda@amicomotors.co.za. Last updated August 2026."),
+  p("Amico Motors, 505 Swemmer Street, Gezina, Pretoria. Phone 082 321 0455. Email amelda@amicomotors.co.za. Last updated August 2026."),
 ];
 
 async function login() {

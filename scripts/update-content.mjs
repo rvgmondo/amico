@@ -24,7 +24,7 @@ const welcome = [
   hd("Enquire in a few clicks"),
   pr("When you are ready, send an enquiry, book a test drive, or message us on WhatsApp straight from any vehicle page. We will get back to you quickly, with no pressure and no pushy sales talk."),
   hd("Come and see us"),
-  pr("You are always welcome to visit us at 505 Swemmer Street, Gezina, Pretoria, or call us on (012) 335-1640. Whether you are buying your first car or your next one, we would love to help you find the right one, not just any car."),
+  pr("You are always welcome to visit us at 505 Swemmer Street, Gezina, Pretoria, or call us on 082 321 0455. Whether you are buying your first car or your next one, we would love to help you find the right one, not just any car."),
   pr("Take a look around, and welcome to Amico Motors."),
 ];
 
