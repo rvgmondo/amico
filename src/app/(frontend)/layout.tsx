@@ -13,6 +13,10 @@ import "../globals.css";
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
+// The header, footer and contact details come from the live CMS, so every public page renders
+// per request. Built once, a page would freeze the build machine's data (it is not the live one).
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000"),
   title: {
