@@ -1,4 +1,5 @@
 import { Award, Banknote, CarFront, Clock, Handshake, HandCoins, MapPin, Phone, Quote } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Hero } from "@/components/home/hero";
@@ -14,6 +15,8 @@ import {
   getSettings,
   getTestimonials,
 } from "@/lib/payload";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const WHY_US = [
   {
