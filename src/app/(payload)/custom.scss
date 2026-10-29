@@ -1,0 +1,579 @@
+/*
+ * AMICO ADMIN: the website's white, navy and gold, applied to Payload.
+ *
+ * Loaded only by src/app/(payload)/layout.tsx, the admin's own root layout, so nothing here
+ * reaches a buyer's page. Every class invented here starts with `am-admin-`. Adapted from the
+ * Rynet and Verboten admins.
+ *
+ * HOW IT WINS: Payload's rules sit in `@layer payload-default`, and a rule in the later
+ * `@layer payload` beats them whatever the selector.
+ *
+ * COLOUR: Payload colours everything through a grey ramp, --theme-elevation-0 (the ground) to
+ * 1000 (the ink). The admin is forced to its light theme (payload.config.ts), and the ramp is
+ * mapped onto navy-tinted greys from the site: white ground, mist #f5f6fa, line #e2e5ee, slate
+ * #5a6275 (muted text, 6.4:1 on white), navy #1a2557 (ink, 14:1). Gold #e7a400 is a fill only;
+ * gold text uses gold-ink #946400 (4.8:1 on white). Every text pairing passes WCAG AA.
+ */
+
+@layer payload {
+  :root,
+  html[data-theme="light"] {
+    --am-white: #ffffff;
+    --am-mist: #f5f6fa;
+    --am-cloud: #eceef5;
+    --am-line: #e2e5ee;
+    --am-line-strong: #c9cedd;
+    --am-slate: #5a6275;
+    --am-navy: #1a2557;
+    --am-navy-deep: #111a42;
+    --am-navy-soft: #2b3a7a;
+    --am-gold: #e7a400;
+    --am-gold-strong: #cf9200;
+    --am-gold-ink: #946400;
+    --am-gold-ground: #fff6dd;
+    --am-warn: #b3261e;
+    --am-warn-ground: #fdecea;
+    --am-ok: #1e6b3a;
+    --am-ok-ground: #e8f5ec;
+
+    --theme-bg: var(--am-white);
+    --theme-input-bg: var(--am-white);
+    --theme-text: var(--am-navy);
+    --theme-border-color: var(--am-line);
+    --theme-success-500: var(--am-gold);
+    --style-radius-s: 4px;
+    --style-radius-m: 6px;
+    --style-radius-l: 10px;
+    --accessibility-outline: 2px solid var(--am-gold);
+    --accessibility-outline-offset: 2px;
+
+    --theme-elevation-0: var(--am-white);
+    --theme-elevation-50: var(--am-mist);
+    --theme-elevation-100: var(--am-cloud);
+    --theme-elevation-150: var(--am-line);
+    --theme-elevation-200: #d7dbe7;
+    --theme-elevation-250: var(--am-line-strong);
+    --theme-elevation-300: #b4bacd;
+    --theme-elevation-350: #9aa1b8;
+    --theme-elevation-400: #7d859d;
+    --theme-elevation-450: #6b7389;
+    --theme-elevation-500: var(--am-slate);
+    --theme-elevation-550: #4c5470;
+    --theme-elevation-600: #3f4766;
+    --theme-elevation-650: #353e62;
+    --theme-elevation-700: #2c355d;
+    --theme-elevation-750: #243059;
+    --theme-elevation-800: var(--am-navy);
+    --theme-elevation-850: var(--am-navy);
+    --theme-elevation-900: var(--am-navy-deep);
+    --theme-elevation-950: var(--am-navy-deep);
+    --theme-elevation-1000: #0b1130;
+  }
+
+  html {
+    background: var(--am-white);
+  }
+
+  /* Carries the next/font variables; adds no box of its own. */
+  .am-admin-fonts {
+    display: contents;
+  }
+  .am-admin-fonts,
+  .am-admin-fonts * {
+    --font-body: var(--am-font-body), system-ui, sans-serif;
+  }
+  body {
+    font-family: var(--font-body);
+  }
+
+  body {
+    background: var(--am-white);
+    color: var(--am-navy);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--am-font-display), "Open Sans", system-ui, sans-serif;
+    color: var(--am-navy);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--am-gold);
+    color: var(--am-navy);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--am-gold);
+    outline-offset: 2px;
+  }
+
+  /* Save, Publish and Create New: gold with navy ink, the same pair as the site's buttons. */
+  .btn--style-primary {
+    --bg-color: var(--am-gold);
+    --color: var(--am-navy);
+    --hover-bg: var(--am-gold-strong);
+    --hover-color: var(--am-navy);
+    background: var(--am-gold);
+    color: var(--am-navy);
+    border-color: var(--am-gold);
+    font-weight: 700;
+  }
+  .btn--style-primary:hover,
+  .btn--style-primary:focus-visible {
+    background: var(--am-gold-strong);
+    color: var(--am-navy);
+  }
+  .btn--style-secondary {
+    --color: var(--am-navy);
+    --box-shadow: inset 0 0 0 1px var(--am-line-strong);
+    --hover-box-shadow: inset 0 0 0 1px var(--am-navy);
+  }
+
+  /* Page and form headings: navy, a touch bolder. */
+  .doc-header__title,
+  .list-header h1,
+  .collection-list__header h1 {
+    font-family: var(--am-font-display), "Open Sans", system-ui, sans-serif;
+    font-weight: 800;
+    color: var(--am-navy);
+  }
+
+  /* The edit screen's top bar and the right-hand panel sit on mist, so the form reads as paper. */
+  .doc-controls,
+  .document-fields__sidebar-wrap,
+  .document-fields__sidebar {
+    background: var(--am-mist);
+  }
+
+  /* The active tab (Car, Photos, Specs, Story) is underlined in gold; the rest are slate. */
+  .tabs-field__tab-button {
+    color: var(--am-slate);
+    font-weight: 600;
+  }
+  .tabs-field__tab-button--active {
+    color: var(--am-navy);
+  }
+  .tabs-field__tab-button--active:after {
+    background-color: var(--am-gold);
+    height: 3px;
+  }
+
+  /* Table rows: a soft navy wash on hover, titles in navy. */
+  .table tbody tr:hover td {
+    background: var(--am-mist);
+  }
+  .table a {
+    color: var(--am-navy);
+    font-weight: 600;
+  }
+
+  /* --------------------------------------------------------------- brand */
+
+  .am-admin-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .am-admin-logo {
+    display: block;
+    width: 220px;
+    height: auto;
+    margin: 0 auto 8px;
+  }
+
+  .am-admin-login-intro {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .am-admin-login-intro__title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+  .am-admin-login-intro__lead {
+    margin: 0.4rem 0 0;
+    color: var(--am-slate);
+  }
+
+  /* Sign-in screen: a navy band at the top, the form on white below it. */
+  .template-minimal {
+    background:
+      linear-gradient(var(--am-navy) 0 6px, transparent 6px),
+      var(--am-white);
+  }
+
+  /* ---------------------------------------------------------------- menu */
+
+  /* The whole menu column is navy, edge to edge and top to bottom. */
+  .nav,
+  .nav__scroll {
+    background: var(--am-navy);
+    border-right: 0;
+  }
+  .nav__scroll {
+    padding: 0;
+  }
+  .am-admin-nav {
+    background: transparent;
+    min-height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+    /* Room at the top for Payload's own collapse button, so it does not sit on the mascot. */
+    padding: 3.75rem 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    color: #d6daeb;
+  }
+  .am-admin-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 0.5rem 0.25rem;
+  }
+  .am-admin-nav__brand .am-admin-icon {
+    background: var(--am-white);
+    border-radius: 50%;
+    padding: 2px;
+  }
+  .am-admin-nav__word {
+    font-family: var(--am-font-display), "Open Sans", system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--am-white);
+  }
+  .am-admin-nav__word span {
+    color: var(--am-gold);
+  }
+  .am-admin-nav__add {
+    display: block;
+    text-align: center;
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    background: var(--am-gold);
+    color: var(--am-navy);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .am-admin-nav__add:hover {
+    background: var(--am-gold-strong);
+    color: var(--am-navy);
+  }
+  .am-admin-nav > *,
+  .am-admin-nav__group,
+  .am-admin-nav__list li,
+  .am-admin-nav__link {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .am-admin-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .am-admin-nav__link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    color: #d6daeb;
+    text-decoration: none;
+  }
+  .am-admin-nav__link:hover {
+    background: var(--am-navy-soft);
+    color: var(--am-white);
+  }
+  .am-admin-nav__link--current {
+    background: var(--am-navy-soft);
+    color: var(--am-white);
+    box-shadow: inset 3px 0 0 var(--am-gold);
+  }
+  .am-admin-nav__list--primary .am-admin-nav__link {
+    font-weight: 600;
+    color: var(--am-white);
+  }
+  .am-admin-nav__toggle {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--am-gold);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .am-admin-nav__group .am-admin-nav__list {
+    margin-top: 0.25rem;
+  }
+  .am-admin-nav__controls {
+    margin-top: auto;
+    display: grid;
+    gap: 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    padding-top: 1rem;
+  }
+  .am-admin-nav__control {
+    padding: 0.5rem 0.75rem;
+    color: #d6daeb;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .am-admin-nav__control:hover {
+    background: var(--am-navy-soft);
+    color: var(--am-white);
+  }
+  .am-admin-nav__by {
+    margin: 0.75rem 0.75rem 0;
+    font-size: 0.75rem;
+    color: #a9b0cc;
+  }
+  /* Payload's hamburger sits on the navy menu when it is open. */
+  .nav__header .hamburger {
+    color: var(--am-navy);
+  }
+
+  /* ---------------------------------------------------------------- home */
+
+  .am-admin-home {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+  .am-admin-home__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .am-admin-home__date {
+    margin: 0;
+    color: var(--am-gold-ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .am-admin-home__title {
+    margin: 0.4rem 0 0;
+    font-size: 2rem;
+    font-weight: 800;
+  }
+  .am-admin-home__lead {
+    margin: 0.4rem 0 0;
+    color: var(--am-slate);
+    font-size: 1.05rem;
+  }
+  .am-admin-home__add {
+    display: inline-block;
+    padding: 0.8rem 1.4rem;
+    border-radius: 8px;
+    background: var(--am-gold);
+    color: var(--am-navy);
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    box-shadow: 0 6px 16px -8px rgba(26, 37, 87, 0.45);
+  }
+  .am-admin-home__add:hover {
+    background: var(--am-gold-strong);
+    color: var(--am-navy);
+  }
+  .am-admin-alert {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--am-warn-ground);
+    border: 1px solid #f3c2bd;
+    border-left: 4px solid var(--am-warn);
+    border-radius: 6px;
+    line-height: 1.6;
+  }
+  .am-admin-stats {
+    list-style: none;
+    padding: 0;
+    margin: 1.75rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+  .am-admin-stat__link {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.1rem;
+    background: var(--am-mist);
+    border: 1px solid var(--am-line);
+    border-top: 3px solid var(--am-navy);
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+  .am-admin-stat__link:hover {
+    border-color: var(--am-line-strong);
+    border-top-color: var(--am-gold);
+  }
+  .am-admin-stat__value {
+    font-family: var(--am-font-display), "Open Sans", system-ui, sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--am-navy);
+  }
+  .am-admin-stat__label {
+    color: var(--am-slate);
+  }
+  .am-admin-stat--warn .am-admin-stat__link {
+    background: var(--am-gold-ground);
+    border-top-color: var(--am-gold);
+  }
+  .am-admin-home__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+  .am-admin-card {
+    background: var(--am-white);
+    border: 1px solid var(--am-line);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    box-shadow: 0 1px 2px rgba(26, 37, 87, 0.06);
+  }
+  .am-admin-card--warn {
+    border-left: 4px solid var(--am-gold);
+  }
+  .am-admin-card--quiet {
+    border-left: 4px solid var(--am-ok);
+  }
+  .am-admin-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .am-admin-card__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .am-admin-card__action {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--am-gold-ink);
+  }
+  .am-admin-card__note {
+    margin: 0.75rem 0 0;
+    color: var(--am-slate);
+    line-height: 1.55;
+  }
+  .am-admin-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .am-admin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--am-line);
+  }
+  .am-admin-row:first-child {
+    border-top: 0;
+  }
+  .am-admin-row__main {
+    display: grid;
+    gap: 2px;
+    text-decoration: none;
+    min-width: 0;
+  }
+  .am-admin-row__title {
+    color: var(--am-navy);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .am-admin-row__main:hover .am-admin-row__title {
+    color: var(--am-gold-ink);
+  }
+  .am-admin-row__meta {
+    color: var(--am-slate);
+    font-size: 0.9rem;
+  }
+  .am-admin-badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--am-gold-ground);
+    color: var(--am-gold-ink);
+  }
+  .am-admin-badge--quiet {
+    background: var(--am-mist);
+    color: var(--am-slate);
+  }
+  .am-admin-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--am-line);
+  }
+  .am-admin-shortcuts a {
+    color: var(--am-navy);
+    font-weight: 600;
+  }
+  .am-admin-shortcuts a:hover {
+    color: var(--am-gold-ink);
+  }
+
+  /* ------------------------------------------------------------- list cells */
+
+  .am-admin-cell--figure {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .am-admin-cell--empty {
+    color: var(--am-warn);
+    font-weight: 600;
+  }
+  .am-admin-pill {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .am-admin-pill--ok {
+    background: var(--am-ok-ground);
+    color: var(--am-ok);
+  }
+  .am-admin-pill--warn {
+    background: var(--am-gold-ground);
+    color: var(--am-gold-ink);
+  }
+  .am-admin-pill--quiet {
+    background: var(--am-cloud);
+    color: var(--am-slate);
+  }
+}

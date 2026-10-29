@@ -40,6 +40,57 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: " | Amico Motors",
+      icons: [{ rel: "icon", type: "image/png", url: "/brand/mascot.png" }],
+    },
+    // Light, like the public site: white ground, navy ink, gold actions. See custom.scss.
+    theme: "light",
+    /*
+     * The Amico Motors look, adapted from the Rynet and Verboten admins: the logo and mascot, a
+     * menu with the day's work at the top, and a home screen that says which enquiries are
+     * waiting and which cars still need something. Styling is src/app/(payload)/custom.scss.
+     * After adding or moving any component path here, run `npm run generate:importmap`.
+     */
+    components: {
+      graphics: {
+        Logo: "/components/admin/brand/admin-logo#AdminLogo",
+        Icon: "/components/admin/brand/admin-logo#AdminIcon",
+      },
+      Nav: "/components/admin/nav/admin-nav#AdminNav",
+      beforeLogin: ["/components/admin/brand/admin-logo#LoginIntro"],
+      views: {
+        dashboard: { Component: "/components/admin/home#AdminHome" },
+      },
+    },
+  },
+  /*
+   * Plainer words for a few Payload labels. Button names the dealership guide refers to
+   * (Create New, Save, Status) are left as they are.
+   */
+  i18n: {
+    translations: {
+      en: {
+        general: {
+          dashboard: "Home",
+          backToDashboard: "Back to home",
+          creatingNewLabel: "Not saved yet",
+          successfullyCreated: "{{label}} added.",
+          updatedSuccessfully: "Saved.",
+          deletedSuccessfully: "Deleted.",
+          confirmDeletion: "Delete for good?",
+          noResults: "Nothing to show. There are none yet, or none match the filters above.",
+        },
+        authentication: {
+          login: "Sign in",
+          logOut: "Sign out",
+          logout: "Sign out",
+          loggedOutSuccessfully: "You are signed out.",
+        },
+        error: {
+          followingFieldsInvalid_one: "Fill in or fix this field first:",
+          followingFieldsInvalid_other: "Fill in or fix these fields first:",
+          correctInvalidFields: "Some fields need fixing before this can be saved.",
+        },
+      },
     },
   },
   collections: [

@@ -142,27 +142,33 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Add a car in four tabs: Car, Photos, Specs, Story. Set its status in the right-hand panel.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicles".
  */
 export interface Vehicle {
   id: number;
   /**
-   * Full title, e.g. "Ford Ranger 2.0D XLT Double Cab Auto 2021".
+   * Leave blank and it builds itself from year, make, model and variant.
    */
   title: string;
   make: number | Make;
+  /**
+   * Pick a make first to see its models.
+   */
   model?: (number | null) | Model;
   variant?: string | null;
-  /**
-   * Price in ZAR (Rand).
-   */
-  price: number;
   year: number;
   /**
-   * Kilometres.
+   * Price in rand (R), numbers only.
+   */
+  price: number;
+  /**
+   * Kilometres, numbers only.
    */
   mileage?: number | null;
+  images?: (number | Media)[] | null;
   bodyType?:
     ('suv' | 'hatchback' | 'sedan' | 'single-cab' | 'double-cab' | 'coupe' | 'mpv' | 'wagon' | 'crossover') | null;
   fuelType?: ('petrol' | 'diesel' | 'hybrid' | 'electric') | null;
@@ -179,11 +185,7 @@ export interface Vehicle {
   exteriorColour?: string | null;
   interiorColour?: string | null;
   /**
-   * Ordered gallery. The first image is the primary/cover photo.
-   */
-  images?: (number | Media)[] | null;
-  /**
-   * Key selling features (e.g. Leather seats, Sunroof, Reverse camera).
+   * Key selling points, one per line (e.g. Leather seats, Sunroof, Reverse camera).
    */
   features?:
     | {
@@ -191,6 +193,9 @@ export interface Vehicle {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Optional. A few sentences on the car and its history.
+   */
   description?: {
     root: {
       type: string;
@@ -652,9 +657,10 @@ export interface VehiclesSelect<T extends boolean = true> {
   make?: T;
   model?: T;
   variant?: T;
-  price?: T;
   year?: T;
+  price?: T;
   mileage?: T;
+  images?: T;
   bodyType?: T;
   fuelType?: T;
   transmission?: T;
@@ -663,7 +669,6 @@ export interface VehiclesSelect<T extends boolean = true> {
   power?: T;
   exteriorColour?: T;
   interiorColour?: T;
-  images?: T;
   features?:
     | T
     | {
