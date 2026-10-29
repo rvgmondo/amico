@@ -2,14 +2,16 @@ import type { CollectionConfig } from "payload";
 
 import { isAdminOrEditor, publishedOrEditor } from "../access/access";
 import { slugField } from "../fields/slug";
+import { b } from "../i18n/labels";
 
 /** Blog / news articles (CMS-driven), with drafts and categories. */
 export const Posts: CollectionConfig = {
   slug: "posts",
+  labels: { singular: b("Post", "Nuusberig"), plural: b("Posts", "Nuus") },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "publishedDate", "_status"],
-    group: "Blog",
+    group: b("Blog", "Blog"),
   },
   versions: {
     drafts: true,

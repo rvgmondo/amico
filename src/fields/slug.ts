@@ -24,7 +24,10 @@ export const slugField = (fieldToUse = "title"): Field => ({
   unique: true,
   admin: {
     position: "sidebar",
-    description: "Auto-generated from the name if left blank.",
+    description: {
+      en: "Auto-generated from the name if left blank.",
+      af: "Word uit die naam gebou as dit oop gelaat word.",
+    },
   },
   hooks: {
     beforeValidate: [

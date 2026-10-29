@@ -15,12 +15,18 @@ export function AdminLogo() {
   return <img className="am-admin-logo" src="/brand/logo.png" alt="Amico Motors" width={220} height={116} />;
 }
 
+const INTRO = {
+  en: { title: "The office", lead: "Your cars, enquiries and the website, in one place." },
+  af: { title: "Die kantoor", lead: "Julle karre, navrae en die webblad, op een plek." },
+};
+
 /** Above the sign-in form. Payload's sign-in screen has no heading, so this is its h1. */
-export function LoginIntro() {
+export function LoginIntro({ i18n }: { i18n?: { language?: string } }) {
+  const t = INTRO[i18n?.language === "af" ? "af" : "en"];
   return (
     <div className="am-admin-login-intro">
-      <h1 className="am-admin-login-intro__title">Die kantoor</h1>
-      <p className="am-admin-login-intro__lead">Julle karre, navrae en die webblad, op een plek.</p>
+      <h1 className="am-admin-login-intro__title">{t.title}</h1>
+      <p className="am-admin-login-intro__lead">{t.lead}</p>
     </div>
   );
 }

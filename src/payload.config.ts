@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { en } from "@payloadcms/translations/languages/en";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import type { GenerateTitle } from "@payloadcms/plugin-seo/types";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
@@ -23,6 +24,7 @@ import { Users } from "./collections/Users";
 import { Vehicles } from "./collections/Vehicles";
 import { Navigation } from "./globals/Navigation";
 import { SiteSettings } from "./globals/SiteSettings";
+import { afrikaans, afSeoPlugin } from "./i18n/af";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -67,6 +69,10 @@ export default buildConfig({
    * (Create New, Save, Status) are left as they are.
    */
   i18n: {
+    // English and Afrikaans; each person switches with EN | AF in the admin menu. See src/i18n/af.ts.
+    // Payload types only the languages it ships; Afrikaans is ours, so the map is widened here.
+    supportedLanguages: { en, af: afrikaans } as unknown as { en: typeof en },
+    fallbackLanguage: "en",
     translations: {
       en: {
         general: {
@@ -91,7 +97,9 @@ export default buildConfig({
           correctInvalidFields: "Some fields need fixing before this can be saved.",
         },
       },
-    },
+      // Payload types translations for its own languages only; the SEO plugin's Afrikaans goes here.
+      af: afSeoPlugin,
+    } as Record<string, object>,
   },
   collections: [
     Vehicles,

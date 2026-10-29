@@ -1,12 +1,13 @@
 import type { GlobalConfig } from "payload";
 
 import { anyone, isAdmin } from "../access/access";
+import { b } from "../i18n/labels";
 
 /** Global site configuration editable by admins. */
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
-  label: "Site Settings",
-  admin: { group: "Settings" },
+  label: b("Site Settings", "Webblad-instellings"),
+  admin: { group: b("Settings", "Instellings") },
   access: {
     read: anyone,
     update: isAdmin,

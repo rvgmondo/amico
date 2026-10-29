@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "@payloadcms/ui";
 import type { DefaultCellComponentProps } from "payload";
 
 import { formatKm, formatPrice } from "@/lib/format";
@@ -11,7 +12,8 @@ import { formatKm, formatPrice } from "@/lib/format";
  */
 
 function Empty() {
-  return <span className="am-admin-cell am-admin-cell--empty">Not set</span>;
+  const { i18n } = useTranslation();
+  return <span className="am-admin-cell am-admin-cell--empty">{i18n.language === "af" ? "Nie ingevul" : "Not set"}</span>;
 }
 
 export function RandCell({ cellData }: DefaultCellComponentProps) {
@@ -24,14 +26,15 @@ export function KmCell({ cellData }: DefaultCellComponentProps) {
   return <span className="am-admin-cell am-admin-cell--figure">{formatKm(cellData)}</span>;
 }
 
-const STATUS: Record<string, { label: string; tone: string }> = {
-  available: { label: "Available", tone: "ok" },
-  reserved: { label: "Reserved", tone: "warn" },
-  sold: { label: "Sold", tone: "quiet" },
+const STATUS: Record<string, { en: string; af: string; tone: string }> = {
+  available: { en: "Available", af: "Beskikbaar", tone: "ok" },
+  reserved: { en: "Reserved", af: "Bespreek", tone: "warn" },
+  sold: { en: "Sold", af: "Verkoop", tone: "quiet" },
 };
 
 export function StatusCell({ cellData }: DefaultCellComponentProps) {
+  const { i18n } = useTranslation();
   const s = typeof cellData === "string" ? STATUS[cellData] : undefined;
   if (!s) return <Empty />;
-  return <span className={`am-admin-pill am-admin-pill--${s.tone}`}>{s.label}</span>;
+  return <span className={`am-admin-pill am-admin-pill--${s.tone}`}>{i18n.language === "af" ? s.af : s.en}</span>;
 }

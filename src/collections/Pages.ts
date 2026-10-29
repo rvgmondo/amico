@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { isAdminOrEditor, publishedOrEditor } from "../access/access";
 import { slugField } from "../fields/slug";
+import { b } from "../i18n/labels";
 
 /**
  * Editable marketing pages (About, Sell Your Car intro, Finance intro, legal).
@@ -10,10 +11,11 @@ import { slugField } from "../fields/slug";
  */
 export const Pages: CollectionConfig = {
   slug: "pages",
+  labels: { singular: b("Page", "Bladsy"), plural: b("Pages", "Bladsye") },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "slug", "_status"],
-    group: "Content",
+    group: b("Content", "Inhoud"),
   },
   versions: {
     drafts: true,

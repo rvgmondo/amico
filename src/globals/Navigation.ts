@@ -1,12 +1,13 @@
 import type { GlobalConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { b } from "../i18n/labels";
 
 /** Header and footer navigation, editable without code. */
 export const Navigation: GlobalConfig = {
   slug: "navigation",
-  label: "Navigation",
-  admin: { group: "Settings" },
+  label: b("Navigation", "Kieslys op die webblad"),
+  admin: { group: b("Settings", "Instellings") },
   access: {
     read: anyone,
     update: isAdminOrEditor,

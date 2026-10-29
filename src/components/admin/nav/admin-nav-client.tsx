@@ -1,7 +1,7 @@
 "use client";
 
 import { NavHamburger, NavWrapper } from "@payloadcms/next/client";
-import { Link, useNav, usePreferences } from "@payloadcms/ui";
+import { Link, useNav, usePreferences, useTranslation } from "@payloadcms/ui";
 import { usePathname } from "next/navigation";
 import { PREFERENCE_KEYS } from "payload/shared";
 import { useEffect, useId, useRef, useState } from "react";
@@ -81,18 +81,49 @@ function useOpenOnLaptops() {
   }, [hydrated, setNavOpen]);
 }
 
+const WORDS = {
+  en: { add: "+ Add a car", home: "Home", site: "View the website", newTab: " (opens in a new tab)", out: "Sign out", by: "Built and cared for by Rynet", lang: "Language" },
+  af: { add: "+ Laai 'n kar", home: "Tuis", site: "Sien die webblad", newTab: " (maak oop in 'n nuwe oortjie)", out: "Meld af", by: "Gebou en versorg deur Rynet", lang: "Taal" },
+};
+
+/** EN | AF. Payload remembers the choice per browser and redraws the admin in that language. */
+function LanguageSwitch({ lang }: { lang: "en" | "af" }) {
+  const { switchLanguage } = useTranslation();
+  return (
+    <div className="am-admin-lang" role="group" aria-label={WORDS[lang].lang}>
+      {(["en", "af"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          className="am-admin-lang__btn"
+          aria-pressed={lang === l}
+          onClick={() => {
+            // Payload types only its own languages; "af" is ours (src/i18n/af.ts).
+            if (l !== lang) void switchLanguage?.(l as never);
+          }}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function AdminNavClient({
+  lang,
   adminRoute,
   logoutHref,
   primary,
   sections,
 }: {
+  lang: "en" | "af";
   adminRoute: string;
   logoutHref: string;
   primary: NavEntity[];
   sections: NavSection[];
 }) {
   const pathname = usePathname() ?? "";
+  const w = WORDS[lang];
   useOpenOnLaptops();
   return (
     <NavWrapper baseClass="nav">
@@ -105,12 +136,12 @@ export function AdminNavClient({
         </div>
 
         <Link className="am-admin-nav__add" href={`${adminRoute}/collections/vehicles/create`} prefetch={false}>
-          + Add a car
+          {w.add}
         </Link>
 
         <ul className="am-admin-nav__list am-admin-nav__list--primary">
           <li>
-            <NavLink entity={{ label: "Home", href: adminRoute }} current={isCurrent(pathname, adminRoute, true)} />
+            <NavLink entity={{ label: w.home, href: adminRoute }} current={isCurrent(pathname, adminRoute, true)} />
           </li>
           {primary.map((e) => (
             <li key={e.href}>
@@ -125,12 +156,14 @@ export function AdminNavClient({
 
         <div className="nav__controls am-admin-nav__controls">
           <a className="am-admin-nav__control" href="/" target="_blank" rel="noopener noreferrer">
-            View the website<span className="sr-only"> (opens in a new tab)</span>
+            {w.site}
+            <span className="sr-only">{w.newTab}</span>
           </a>
           <Link className="am-admin-nav__control" href={logoutHref} prefetch={false}>
-            Sign out
+            {w.out}
           </Link>
-          <p className="am-admin-nav__by">Built and cared for by Rynet</p>
+          <LanguageSwitch lang={lang} />
+          <p className="am-admin-nav__by">{w.by}</p>
         </div>
       </nav>
       <div className="nav__header">

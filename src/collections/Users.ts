@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { canAccessAdmin, isAdmin, isAdminFieldLevel, isAdminOrSelf } from "../access/access";
+import { b } from "../i18n/labels";
 
 /**
  * Staff accounts for the admin portal.
@@ -13,11 +14,12 @@ import { canAccessAdmin, isAdmin, isAdminFieldLevel, isAdminOrSelf } from "../ac
  */
 export const Users: CollectionConfig = {
   slug: "users",
+  labels: { singular: b("User", "Gebruiker"), plural: b("Users", "Gebruikers") },
   auth: true,
   admin: {
     useAsTitle: "email",
     defaultColumns: ["name", "email", "roles"],
-    group: "Admin",
+    group: b("Admin", "Bestuur"),
   },
   access: {
     read: isAdminOrSelf,

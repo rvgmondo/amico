@@ -17,13 +17,16 @@ import { AdminNavClient, type NavEntity, type NavSection } from "./admin-nav-cli
 type NavPreferences = { open?: boolean; groups?: Record<string, { open?: boolean } | undefined> };
 
 const PRIMARY = ["vehicles", "enquiries"];
-const FOLDED_BY_DEFAULT = ["Blog", "Content", "Admin", "Settings"];
+// Folded until opened, in both languages.
+const FOLDED_BY_DEFAULT = ["Blog", "Content", "Admin", "Settings", "Inhoud", "Bestuur", "Instellings"];
 
-const readLabel = (label: unknown, fallback: string): string => {
+/** A config label in the reader's language: plain strings as they are, { en, af } by language. */
+const readLabel = (label: unknown, fallback: string, lang: string): string => {
   if (typeof label === "string" && label) return label;
   if (label && typeof label === "object") {
-    const en = (label as Record<string, unknown>).en;
-    if (typeof en === "string" && en) return en;
+    const byLang = label as Record<string, unknown>;
+    const text = byLang[lang] ?? byLang.en;
+    if (typeof text === "string" && text) return text;
   }
   return fallback;
 };
@@ -31,7 +34,8 @@ const readLabel = (label: unknown, fallback: string): string => {
 export async function AdminNav(
   props: ServerProps & { req?: PayloadRequest; visibleEntities?: ServerProps["visibleEntities"] },
 ) {
-  const { payload, permissions, visibleEntities, req, user } = props;
+  const { payload, permissions, visibleEntities, req, user, i18n } = props;
+  const lang = i18n?.language === "af" ? "af" : "en";
   if (!payload?.config) return null;
   const admin = payload.config.routes.admin;
   const visible = visibleEntities?.collections ?? [];
@@ -42,21 +46,21 @@ export async function AdminNav(
     if (!visible.includes(c.slug)) continue;
     if (!permissions?.collections?.[c.slug]?.read) continue;
     if (c.admin?.group === false) continue;
-    const entity = { label: readLabel(c.labels?.plural, c.slug), href: `${admin}/collections/${c.slug}` };
+    const entity = { label: readLabel(c.labels?.plural, c.slug, lang), href: `${admin}/collections/${c.slug}` };
     if (PRIMARY.includes(c.slug)) {
       primary[PRIMARY.indexOf(c.slug)] = entity;
       continue;
     }
-    const group = readLabel(c.admin?.group, "Content");
+    const group = readLabel(c.admin?.group, lang === "af" ? "Inhoud" : "Content", lang);
     groups.set(group, [...(groups.get(group) ?? []), entity]);
   }
   for (const g of payload.config.globals) {
     if (!(visibleEntities?.globals ?? []).includes(g.slug)) continue;
     if (!permissions?.globals?.[g.slug]?.read) continue;
-    const group = readLabel(g.admin?.group, "Settings");
+    const group = readLabel(g.admin?.group, lang === "af" ? "Instellings" : "Settings", lang);
     groups.set(group, [
       ...(groups.get(group) ?? []),
-      { label: readLabel(g.label, g.slug), href: `${admin}/globals/${g.slug}` },
+      { label: readLabel(g.label, g.slug, lang), href: `${admin}/globals/${g.slug}` },
     ]);
   }
 
@@ -88,6 +92,7 @@ export async function AdminNav(
 
   return (
     <AdminNavClient
+      lang={lang}
       adminRoute={admin}
       logoutHref={`${admin}${payload.config.admin.routes.logout}`}
       primary={primary.filter(Boolean)}

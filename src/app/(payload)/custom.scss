@@ -576,4 +576,33 @@
     background: var(--am-cloud);
     color: var(--am-slate);
   }
+
+  /* ------------------------------------------------------ language switch */
+
+  .am-admin-lang {
+    display: inline-flex;
+    margin: 0.75rem 0.75rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    overflow: hidden;
+    width: max-content;
+  }
+  .am-admin-lang__btn {
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.85rem;
+    background: transparent;
+    color: #d6daeb;
+    border: 0;
+    cursor: pointer;
+  }
+  .am-admin-lang__btn[aria-pressed="true"] {
+    background: var(--am-gold);
+    color: var(--am-navy);
+  }
+  .am-admin-lang__btn:hover:not([aria-pressed="true"]) {
+    color: var(--am-white);
+  }
 }

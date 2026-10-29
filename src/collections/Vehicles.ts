@@ -2,6 +2,7 @@ import type { CollectionConfig, Payload } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
 import { slugField, slugify } from "../fields/slug";
+import { AF_OPTIONS, b, bilingual } from "../i18n/labels";
 import {
   BODY_TYPES,
   CONDITIONS,
@@ -38,12 +39,16 @@ const titleFromCar = async ({ value, data, req }: TitleArgs) => {
 /** The core inventory content type. */
 export const Vehicles: CollectionConfig = {
   slug: "vehicles",
+  labels: { singular: b("Vehicle", "Kar"), plural: b("Vehicles", "Karre") },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "price", "year", "mileage", "status"],
     listSearchableFields: ["title", "variant", "stockNumber"],
-    group: "Inventory",
-    description: "Add a car in four tabs: Car, Photos, Specs, Story. Set its status in the right-hand panel.",
+    group: b("Inventory", "Voorraad"),
+    description: b(
+      "Add a car in four tabs: Car, Photos, Specs, Story. Set its status in the right-hand panel.",
+      "Laai 'n kar in vier oortjies: Kar, Foto's, Specs, Storie. Sy status staan in die paneel regs.",
+    ),
   },
   access: {
     read: anyone,
@@ -69,53 +74,71 @@ export const Vehicles: CollectionConfig = {
       type: "tabs",
       tabs: [
         {
-          label: "Car",
-          description: "The essentials. Only make, year and price are needed to save.",
+          label: b("Car", "Kar"),
+          description: b(
+            "The essentials. Only make, year and price are needed to save.",
+            "Die basiese goed. Net handelsmerk, jaar en prys is nodig om te stoor.",
+          ),
           fields: [
             {
               name: "title",
               type: "text",
+              label: b("Title", "Titel"),
               // Required, but the collection hook above fills it in before validation runs.
               required: true,
               admin: {
-                description: "Leave blank and it builds itself from year, make, model and variant.",
-                placeholder: "Filled in for you when you save",
+                description: b(
+                  "Leave blank and it builds itself from year, make, model and variant.",
+                  "Los oop, dan bou dit homself uit jaar, handelsmerk, model en variant.",
+                ),
+                placeholder: b("Filled in for you when you save", "Word vir jou ingevul as jy stoor"),
               },
             },
             {
               type: "row",
               fields: [
-                { name: "make", type: "relationship", relationTo: "makes", required: true },
+                { name: "make", type: "relationship", relationTo: "makes", required: true, label: b("Make", "Handelsmerk") },
                 {
                   name: "model",
                   type: "relationship",
+                  label: b("Model", "Model"),
                   relationTo: "models",
                   filterOptions: ({ data }) => (data?.make ? { make: { equals: data.make } } : true),
-                  admin: { description: "Pick a make first to see its models." },
+                  admin: { description: b("Pick a make first to see its models.", "Kies eers die handelsmerk om sy modelle te sien.") },
                 },
-                { name: "variant", type: "text", admin: { placeholder: "e.g. XLT Double Cab Auto" } },
+                {
+                  name: "variant",
+                  type: "text",
+                  label: b("Variant", "Variant"),
+                  admin: { placeholder: b("e.g. XLT Double Cab Auto", "bv. XLT Double Cab Auto") },
+                },
               ],
             },
             {
               type: "row",
               fields: [
-                { name: "year", type: "number", required: true, min: 1950, max: 2100 },
+                { name: "year", type: "number", required: true, min: 1950, max: 2100, label: b("Year", "Jaar") },
                 {
                   name: "price",
                   type: "number",
+                  label: b("Price", "Prys"),
                   required: true,
                   min: 0,
                   admin: {
-                    description: "Price in rand (R), numbers only.",
+                    description: b("Price in rand (R), numbers only.", "Prys in rand (R), net syfers."),
                     components: { Cell: "/components/admin/cells/value-cells#RandCell" },
                   },
                 },
                 {
                   name: "mileage",
                   type: "number",
+                  label: b("Mileage", "Kilometers"),
                   min: 0,
                   admin: {
-                    description: "Kilometres, numbers only.",
+                    description: b(
+                      "Kilometres, numbers only. Without it, Rynet does not show the car.",
+                      "Net syfers. Sonder kilometers wys Rynet die kar nie.",
+                    ),
                     components: { Cell: "/components/admin/cells/value-cells#KmCell" },
                   },
                 },
@@ -124,8 +147,11 @@ export const Vehicles: CollectionConfig = {
           ],
         },
         {
-          label: "Photos",
-          description: "Drop in every photo at once. The first one is the cover; drag to reorder.",
+          label: b("Photos", "Foto's"),
+          description: b(
+            "Drop in every photo at once. The first one is the cover; drag to reorder.",
+            "Sleep al die foto's gelyk in. Die eerste een is die voorblad; sleep om die volgorde te verander.",
+          ),
           fields: [
             {
               name: "images",
@@ -137,50 +163,89 @@ export const Vehicles: CollectionConfig = {
           ],
         },
         {
-          label: "Specs",
+          label: b("Specs", "Specs"),
           fields: [
             {
               type: "row",
               fields: [
-                { name: "bodyType", type: "select", options: BODY_TYPES },
-                { name: "fuelType", type: "select", options: FUEL_TYPES },
-                { name: "transmission", type: "select", options: TRANSMISSIONS },
+                {
+                  name: "bodyType",
+                  type: "select",
+                  label: b("Body type", "Bakstyl"),
+                  options: bilingual(BODY_TYPES, AF_OPTIONS.bodyType),
+                },
+                {
+                  name: "fuelType",
+                  type: "select",
+                  label: b("Fuel type", "Brandstof"),
+                  options: bilingual(FUEL_TYPES, AF_OPTIONS.fuelType),
+                },
+                {
+                  name: "transmission",
+                  type: "select",
+                  label: b("Transmission", "Ratkas"),
+                  options: bilingual(TRANSMISSIONS, AF_OPTIONS.transmission),
+                },
               ],
             },
             {
               type: "row",
               fields: [
-                { name: "drivetrain", type: "select", options: DRIVETRAINS },
-                { name: "engine", type: "text", admin: { description: 'e.g. "2.0L turbo".' } },
-                { name: "power", type: "text", admin: { description: 'e.g. "132 kW".' } },
+                {
+                  name: "drivetrain",
+                  type: "select",
+                  label: b("Drivetrain", "Aandrywing"),
+                  options: bilingual(DRIVETRAINS, AF_OPTIONS.drivetrain),
+                },
+                {
+                  name: "engine",
+                  type: "text",
+                  label: b("Engine", "Enjin"),
+                  admin: { description: b('e.g. "2.0L turbo".', 'bv. "2.0L turbo".') },
+                },
+                {
+                  name: "power",
+                  type: "text",
+                  label: b("Power", "Krag"),
+                  admin: { description: b('e.g. "132 kW".', 'bv. "132 kW".') },
+                },
               ],
             },
             {
               type: "row",
               fields: [
-                { name: "exteriorColour", type: "text", label: "Exterior colour" },
-                { name: "interiorColour", type: "text", label: "Interior colour" },
+                { name: "exteriorColour", type: "text", label: b("Exterior colour", "Buitekleur") },
+                { name: "interiorColour", type: "text", label: b("Interior colour", "Binnekleur") },
               ],
             },
           ],
         },
         {
-          label: "Story",
+          label: b("Story", "Storie"),
           fields: [
             {
               name: "features",
               type: "array",
-              labels: { singular: "Feature", plural: "Features" },
+              labels: { singular: b("Feature", "Kenmerk"), plural: b("Features", "Kenmerke") },
               admin: {
-                description: "Key selling points, one per line (e.g. Leather seats, Sunroof, Reverse camera).",
+                description: b(
+                  "Key selling points, one per line (e.g. Leather seats, Sunroof, Reverse camera).",
+                  "Goeie punte, een per lyn (bv. Leersitplekke, Sondak, Trukamera).",
+                ),
                 initCollapsed: false,
               },
-              fields: [{ name: "feature", type: "text", required: true, label: "Feature" }],
+              fields: [{ name: "feature", type: "text", required: true, label: b("Feature", "Kenmerk") }],
             },
             {
               name: "description",
               type: "richText",
-              admin: { description: "Optional. A few sentences on the car and its history." },
+              label: b("Description", "Beskrywing"),
+              admin: {
+                description: b(
+                  "Optional. A few sentences on the car and its history.",
+                  "Opsioneel. 'n Paar sinne oor die kar en sy geskiedenis.",
+                ),
+              },
             },
           ],
         },
@@ -190,14 +255,16 @@ export const Vehicles: CollectionConfig = {
     {
       name: "condition",
       type: "select",
-      options: CONDITIONS,
+      label: b("Condition", "Toestand"),
+      options: bilingual(CONDITIONS, AF_OPTIONS.condition),
       defaultValue: "used",
       admin: { position: "sidebar" },
     },
     {
       name: "status",
       type: "select",
-      options: VEHICLE_STATUSES,
+      label: b("Status", "Status"),
+      options: bilingual(VEHICLE_STATUSES, AF_OPTIONS.status),
       defaultValue: "available",
       required: true,
       admin: { position: "sidebar", components: { Cell: "/components/admin/cells/value-cells#StatusCell" } },
@@ -205,18 +272,23 @@ export const Vehicles: CollectionConfig = {
     {
       name: "featured",
       type: "checkbox",
+      label: b("Featured", "Uitgelig"),
       defaultValue: false,
-      admin: { position: "sidebar", description: "Show on the homepage featured row." },
+      admin: {
+        position: "sidebar",
+        description: b("Show on the homepage featured row.", "Wys in die uitgeligte ry op die tuisblad."),
+      },
     },
-    { name: "stockNumber", type: "text", admin: { position: "sidebar" } },
+    { name: "stockNumber", type: "text", label: b("Stock number", "Voorraadnommer"), admin: { position: "sidebar" } },
     { name: "vin", type: "text", label: "VIN", admin: { position: "sidebar" } },
     {
       name: "sourceUrl",
       type: "text",
+      label: b("Old website link", "Ou webblad se skakel"),
       admin: {
         position: "sidebar",
         readOnly: true,
-        description: "Original listing URL (provenance for seeded data).",
+        description: b("Where this car was listed on the old website.", "Waar hierdie kar op die ou webblad was."),
       },
     },
     // Last on purpose: the slug is built from the title, which the field above fills in first.

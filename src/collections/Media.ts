@@ -3,6 +3,7 @@ import path from "path";
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { b } from "../i18n/labels";
 
 /**
  * Uploaded media (vehicle photography, blog imagery, team photos).
@@ -14,6 +15,7 @@ import { anyone, isAdminOrEditor } from "../access/access";
  */
 export const Media: CollectionConfig = {
   slug: "media",
+  labels: { singular: b("Photo", "Foto"), plural: b("Media", "Foto's en lêers") },
   access: {
     read: anyone,
     create: isAdminOrEditor,

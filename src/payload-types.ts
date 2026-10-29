@@ -165,7 +165,7 @@ export interface Vehicle {
    */
   price: number;
   /**
-   * Kilometres, numbers only.
+   * Kilometres, numbers only. Without it, Rynet does not show the car.
    */
   mileage?: number | null;
   images?: (number | Media)[] | null;
@@ -220,7 +220,7 @@ export interface Vehicle {
   stockNumber?: string | null;
   vin?: string | null;
   /**
-   * Original listing URL (provenance for seeded data).
+   * Where this car was listed on the old website.
    */
   sourceUrl?: string | null;
   /**
@@ -339,7 +339,7 @@ export interface Enquiry {
   email?: string | null;
   phone?: string | null;
   /**
-   * The vehicle this lead is about, if any.
+   * The car this enquiry is about, if any.
    */
   vehicle?: (number | null) | Vehicle;
   /**
@@ -348,7 +348,7 @@ export interface Enquiry {
   preferredDate?: string | null;
   message?: string | null;
   /**
-   * Extra structured fields from trade-in / finance forms.
+   * Extra answers from the trade-in and finance forms.
    */
   details?:
     | {
@@ -361,7 +361,7 @@ export interface Enquiry {
     | null;
   consent?: boolean | null;
   /**
-   * Submitting page URL.
+   * The page the form was sent from.
    */
   source?: string | null;
   updatedAt: string;
