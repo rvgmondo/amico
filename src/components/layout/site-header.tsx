@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 
+import { LanguageSwitch, useT } from "@/components/i18n";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -15,10 +16,11 @@ import { cn } from "@/lib/utils";
 
 function SavedLink() {
   const { count, ready } = useFavourites();
+  const { t } = useT();
   return (
     <Link
       href="/saved"
-      aria-label={`Saved vehicles${ready && count ? ` (${count})` : ""}`}
+      aria-label={t.common.saved(ready ? count : 0)}
       className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Heart className="size-[18px]" />
@@ -45,6 +47,7 @@ export function SiteHeader({
   whatsappHref?: string | null;
 }) {
   const pathname = usePathname();
+  const { t } = useT();
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => setOpen(false), [pathname]);
@@ -56,7 +59,7 @@ export function SiteHeader({
       <Container className="flex h-16 items-center justify-between gap-4 lg:h-[70px]">
         <Link
           href="/"
-          aria-label="Amico Motors home"
+          aria-label={t.common.homeAria}
           className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <Image
@@ -96,6 +99,7 @@ export function SiteHeader({
             </a>
           ) : null}
           <SavedLink />
+          <LanguageSwitch className="hidden sm:inline-flex" />
           <ThemeToggle className="hidden sm:inline-flex" />
           {cta ? (
             <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
@@ -108,7 +112,7 @@ export function SiteHeader({
             <Dialog.Trigger asChild>
               <button
                 type="button"
-                aria-label="Open menu"
+                aria-label={t.common.openMenu}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden"
               >
                 <Menu className="size-5" />
@@ -118,11 +122,11 @@ export function SiteHeader({
               <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out" />
               <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col gap-1 border-l border-border bg-background p-6 shadow-xl focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right">
                 <div className="mb-4 flex items-center justify-between">
-                  <Dialog.Title className="font-display text-lg font-bold">Menu</Dialog.Title>
+                  <Dialog.Title className="font-display text-lg font-bold">{t.common.menu}</Dialog.Title>
                   <Dialog.Close asChild>
                     <button
                       type="button"
-                      aria-label="Close menu"
+                      aria-label={t.common.closeMenu}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <X className="size-5" />
@@ -149,12 +153,16 @@ export function SiteHeader({
                   {whatsappHref ? (
                     <Button asChild variant="whatsapp" className="w-full">
                       <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                        <MessageCircle className="size-4" /> WhatsApp us
+                        <MessageCircle className="size-4" /> {t.common.whatsappUs}
                       </a>
                     </Button>
                   ) : null}
                   <div className="flex items-center justify-between pt-2">
-                    <span className="text-sm text-muted-foreground">Theme</span>
+                    <span className="text-sm text-muted-foreground">{t.common.language}</span>
+                    <LanguageSwitch />
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-sm text-muted-foreground">{t.common.theme}</span>
                     <ThemeToggle />
                   </div>
                 </div>

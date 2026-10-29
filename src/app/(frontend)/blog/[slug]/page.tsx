@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { RichText } from "@/components/rich-text";
 import { Container } from "@/components/ui/container";
 import { formatDate } from "@/lib/format";
+import { getT } from "@/lib/i18n-server";
 import { getPostBySlug, mediaUrl } from "@/lib/payload";
 
 export const dynamic = "force-dynamic";
@@ -48,14 +49,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     image: src ?? undefined,
   };
 
+  const { t } = await getT();
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Container className="py-6">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">Home</Link>
+        <nav aria-label={t.car.breadcrumb} className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Link href="/" className="hover:text-foreground">{t.common.home}</Link>
           <ChevronRight className="size-3.5" />
-          <Link href="/blog" className="hover:text-foreground">News</Link>
+          <Link href="/blog" className="hover:text-foreground">{t.news.news}</Link>
           <ChevronRight className="size-3.5" />
           <span className="line-clamp-1 text-foreground">{post.title}</span>
         </nav>

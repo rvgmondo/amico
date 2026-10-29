@@ -6,6 +6,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { EnquiryForm } from "@/components/forms/enquiry-form";
+import { useT } from "@/components/i18n";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "@/components/vehicles/save-button";
 
@@ -18,6 +19,7 @@ function ActionDialog({
   trigger: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const { t } = useT();
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
@@ -29,7 +31,7 @@ function ActionDialog({
             <Dialog.Close asChild>
               <button
                 type="button"
-                aria-label="Close"
+                aria-label={t.common.close}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-muted"
               >
                 <X className="size-4" />
@@ -50,13 +52,14 @@ export function VehicleActions({
   vehicle: { id: number; title: string; slug: string };
   whatsapp?: { number: string } | null;
 }) {
+  const { t } = useT();
   const url =
     typeof window !== "undefined"
       ? window.location.href
       : `https://amicomotors.co.za/vehicles/${vehicle.slug}`;
   const waHref = whatsapp?.number
     ? `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(
-        `Hi, I'm interested in the ${vehicle.title}. Is it still available?`,
+        t.car.whatsappText(vehicle.title),
       )}`
     : null;
 
@@ -64,10 +67,10 @@ export function VehicleActions({
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
         <ActionDialog
-          title="Enquire about this vehicle"
+          title={t.car.enquireTitle}
           trigger={
             <Button variant="accent" className="w-full">
-              <Mail className="size-4" /> Enquire
+              <Mail className="size-4" /> {t.car.enquire}
             </Button>
           }
         >
@@ -75,10 +78,10 @@ export function VehicleActions({
         </ActionDialog>
 
         <ActionDialog
-          title="Book a test drive"
+          title={t.car.testDriveTitle}
           trigger={
             <Button variant="outline" className="w-full">
-              <CalendarDays className="size-4" /> Test drive
+              <CalendarDays className="size-4" /> {t.car.testDrive}
             </Button>
           }
         >
@@ -88,7 +91,7 @@ export function VehicleActions({
 
       <Button asChild variant="secondary" className="w-full">
         <Link href={`/finance?vehicle=${encodeURIComponent(vehicle.slug)}`}>
-          <Banknote className="size-4" /> Apply for finance
+          <Banknote className="size-4" /> {t.car.applyFinance}
         </Link>
       </Button>
 
@@ -96,7 +99,7 @@ export function VehicleActions({
         {waHref ? (
           <Button asChild variant="whatsapp" className="w-full">
             <a href={waHref} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="size-4" /> WhatsApp about this car
+              <MessageCircle className="size-4" /> {t.car.whatsapp}
             </a>
           </Button>
         ) : (

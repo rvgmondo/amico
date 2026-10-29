@@ -2,30 +2,36 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2 } from "lucide-react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { submitEnquiry } from "@/app/actions/enquiry";
 import { Field, HoneypotField } from "@/components/forms/fields";
+import { useT } from "@/components/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { HONEYPOT } from "@/lib/enquiry-schema";
+import type { Dict } from "@/lib/i18n";
 
-const schema = z.object({
-  name: z.string().trim().min(2, "Please enter your name"),
-  email: z.string().trim().email("Enter a valid email address"),
+const makeSchema = (t: Dict) =>
+  z.object({
+  name: z.string().trim().min(2, t.form.errName),
+  email: z.string().trim().email(t.form.errEmail),
   phone: z.string().trim().optional().or(z.literal("")),
   subject: z.string().trim().optional().or(z.literal("")),
-  message: z.string().trim().min(5, "Please enter a message"),
-  consent: z.literal(true, { message: "Please accept to continue" }),
+  message: z.string().trim().min(5, t.form.errMessage),
+  consent: z.literal(true, { message: t.form.errConsent }),
   [HONEYPOT]: z.string().optional(),
 });
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<ReturnType<typeof makeSchema>>;
 
 export function ContactForm() {
+  const { t } = useT();
+  const schema = React.useMemo(() => makeSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -46,7 +52,7 @@ export function ContactForm() {
       [HONEYPOT]: String((v as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks, we'll be in touch shortly.");
+      toast.success(t.form.toastThanks);
       reset();
     } else {
       toast.error(res.error);
@@ -57,8 +63,8 @@ export function ContactForm() {
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-8 text-center">
         <CheckCircle2 className="size-10 text-success" />
-        <p className="font-display text-lg font-bold">Message sent</p>
-        <p className="text-sm text-muted-foreground">Thank you. We&apos;ll get back to you soon.</p>
+        <p className="font-display text-lg font-bold">{t.form.messageSentTitle}</p>
+        <p className="text-sm text-muted-foreground">{t.form.messageSentBody}</p>
       </div>
     );
   }
@@ -67,28 +73,28 @@ export function ContactForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <HoneypotField {...register(HONEYPOT)} />
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Name" htmlFor="c-name" required error={errors.name?.message}>
+        <Field label={t.form.name} htmlFor="c-name" required error={errors.name?.message}>
           <Input id="c-name" autoComplete="name" aria-invalid={!!errors.name} {...register("name")} />
         </Field>
-        <Field label="Phone" htmlFor="c-phone" error={errors.phone?.message}>
+        <Field label={t.form.phone} htmlFor="c-phone" error={errors.phone?.message}>
           <Input id="c-phone" type="tel" autoComplete="tel" {...register("phone")} />
         </Field>
       </div>
-      <Field label="Email" htmlFor="c-email" required error={errors.email?.message}>
+      <Field label={t.form.email} htmlFor="c-email" required error={errors.email?.message}>
         <Input id="c-email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register("email")} />
       </Field>
-      <Field label="Subject" htmlFor="c-subject" error={errors.subject?.message}>
+      <Field label={t.form.subject} htmlFor="c-subject" error={errors.subject?.message}>
         <Input id="c-subject" {...register("subject")} />
       </Field>
-      <Field label="Message" htmlFor="c-message" required error={errors.message?.message}>
+      <Field label={t.form.message} htmlFor="c-message" required error={errors.message?.message}>
         <Textarea id="c-message" rows={5} aria-invalid={!!errors.message} {...register("message")} />
       </Field>
       <label className="flex items-start gap-2.5 text-sm">
         <input type="checkbox" className="mt-0.5 size-4" style={{ accentColor: "var(--accent)" }} {...register("consent")} />
         <span className="text-muted-foreground">
-          I agree to Amico Motors processing my details per the{" "}
+          {t.form.consentContact}{" "}
           <a href="/privacy" className="text-accent-ink underline">
-            Privacy Policy
+            {t.form.privacy}
           </a>{" "}
           (POPIA).
         </span>
@@ -99,7 +105,7 @@ export function ContactForm() {
         </p>
       ) : null}
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-fit">
-        {isSubmitting ? "Sending" : "Send message"}
+        {isSubmitting ? t.form.sending : t.form.sendMessage}
       </Button>
     </form>
   );

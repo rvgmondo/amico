@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
+import { useT } from "@/components/i18n";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "@/components/vehicles/save-button";
 import { formatKm, formatPrice } from "@/lib/format";
@@ -21,6 +22,7 @@ function cardImage(v: Vehicle): string | null {
 
 export function SavedList() {
   const { ids, ready } = useFavourites();
+  const { t } = useT();
   const [vehicles, setVehicles] = React.useState<Vehicle[] | null>(null);
 
   React.useEffect(() => {
@@ -40,19 +42,19 @@ export function SavedList() {
   }, [ids, ready]);
 
   if (!ready || vehicles === null) {
-    return <p className="py-16 text-center text-muted-foreground">Loading your saved vehicles</p>;
+    return <p className="py-16 text-center text-muted-foreground">{t.saved.loading}</p>;
   }
 
   if (!vehicles.length) {
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border py-20 text-center">
         <Heart className="size-8 text-muted-foreground" />
-        <p className="font-display text-lg font-bold">No saved vehicles yet</p>
+        <p className="font-display text-lg font-bold">{t.saved.noneTitle}</p>
         <p className="max-w-sm text-sm text-muted-foreground">
-          Tap the heart on any vehicle to save it here for later.
+          {t.saved.noneBody}
         </p>
         <Button asChild className="mt-2">
-          <Link href="/vehicles">Browse stock</Link>
+          <Link href="/vehicles">{t.common.browseStock}</Link>
         </Button>
       </div>
     );
@@ -69,7 +71,7 @@ export function SavedList() {
                 {src ? (
                   <Image src={src} alt={v.title} fill sizes="400px" className="object-cover" />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">No image</div>
+                  <div className="flex h-full items-center justify-center text-muted-foreground">{t.common.noImage}</div>
                 )}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">

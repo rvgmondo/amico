@@ -1,15 +1,18 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+import type { Dict } from "@/lib/i18n";
 import { filtersToQuery, type VehicleFilters } from "@/lib/vehicle-query";
 import { cn } from "@/lib/utils";
 
 export function Pagination({
   filters,
   totalPages,
+  t,
 }: {
   filters: VehicleFilters;
   totalPages: number;
+  t: Dict;
 }) {
   if (totalPages <= 1) return null;
   const page = filters.page;
@@ -25,9 +28,9 @@ export function Pagination({
     "inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-border px-3 text-sm font-medium transition-colors";
 
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-2">
+    <nav aria-label={t.list.pagination} className="flex items-center justify-center gap-2">
       {page > 1 ? (
-        <Link href={href(page - 1)} className={cn(base, "hover:bg-muted")} aria-label="Previous page">
+        <Link href={href(page - 1)} className={cn(base, "hover:bg-muted")} aria-label={t.list.prevPage}>
           <ChevronLeft className="size-4" />
         </Link>
       ) : (
@@ -51,7 +54,7 @@ export function Pagination({
       ))}
 
       {page < totalPages ? (
-        <Link href={href(page + 1)} className={cn(base, "hover:bg-muted")} aria-label="Next page">
+        <Link href={href(page + 1)} className={cn(base, "hover:bg-muted")} aria-label={t.list.nextPage}>
           <ChevronRight className="size-4" />
         </Link>
       ) : (

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { formatDate } from "@/lib/format";
+import { getT } from "@/lib/i18n-server";
 import { getPosts, mediaUrl } from "@/lib/payload";
 
 export const dynamic = "force-dynamic";
@@ -17,11 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getPosts(24);
+  const [posts, { t }] = await Promise.all([getPosts(24), getT()]);
 
   return (
     <>
-      <PageHero eyebrow="News" title="News & updates" description="New stock arrivals, finance specials and dealership news." />
+      <PageHero eyebrow={t.news.eyebrow} title={t.news.title} description={t.news.lead} />
       <Container className="py-12">
         {posts.length ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -56,8 +57,8 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="rounded-xl border border-dashed border-border py-20 text-center">
-            <p className="font-display text-lg font-bold">No articles yet</p>
-            <p className="mt-2 text-sm text-muted-foreground">Check back soon for news and updates.</p>
+            <p className="font-display text-lg font-bold">{t.news.noneTitle}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t.news.noneBody}</p>
           </div>
         )}
       </Container>

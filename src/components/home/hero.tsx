@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { formatPrice } from "@/lib/format";
+import type { Dict } from "@/lib/i18n";
 import { mediaUrl, primaryImage } from "@/lib/payload";
 import type { SiteSetting, Vehicle } from "@/payload-types";
 
@@ -12,7 +13,9 @@ export function Hero({
   featured,
   stockCount,
   whatsappHref,
+  t,
 }: {
+  t: Dict;
   featured: Vehicle | null;
   stockCount: number;
   whatsappHref: string | null;
@@ -33,23 +36,21 @@ export function Hero({
             <ShieldCheck className="size-4" /> SA Multi Franchise Group
           </span>
           <h1 className="text-balance font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-            Find the one, <span className="text-accent">not just a car.</span>
+            {t.hero.title1} <span className="text-accent">{t.hero.title2}</span>
           </h1>
           <p className="max-w-xl text-pretty text-lg text-white/80">
-            A fine selection of quality used vehicles in Gezina, Pretoria. Honest advice, easy
-            bank finance, and no pressure, just help finding the right car for your needs and your
-            pocket.
+            {t.hero.lead}
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button asChild variant="accent" size="lg">
               <Link href="/vehicles">
-                Browse our stock <ArrowRight className="size-4" />
+                {t.hero.browse} <ArrowRight className="size-4" />
               </Link>
             </Button>
             {whatsappHref ? (
               <Button asChild variant="whatsapp" size="lg">
                 <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="size-4" /> WhatsApp us
+                  <MessageCircle className="size-4" /> {t.common.whatsappUs}
                 </a>
               </Button>
             ) : null}
@@ -57,15 +58,15 @@ export function Hero({
           <dl className="mt-2 flex flex-wrap gap-x-10 gap-y-4">
             <div>
               <dt className="text-2xl font-extrabold text-accent">{stockCount}+</dt>
-              <dd className="text-sm text-white/70">Cars in stock</dd>
+              <dd className="text-sm text-white/70">{t.hero.inStock}</dd>
             </div>
             <div>
-              <dt className="text-2xl font-extrabold text-accent">Most banks</dt>
-              <dd className="text-sm text-white/70">Approved finance dealer</dd>
+              <dt className="text-2xl font-extrabold text-accent">{t.hero.banks}</dt>
+              <dd className="text-sm text-white/70">{t.hero.banksSub}</dd>
             </div>
             <div>
-              <dt className="text-2xl font-extrabold text-accent">Trade-ins</dt>
-              <dd className="text-sm text-white/70">Welcome</dd>
+              <dt className="text-2xl font-extrabold text-accent">{t.hero.tradeIns}</dt>
+              <dd className="text-sm text-white/70">{t.hero.tradeInsSub}</dd>
             </div>
           </dl>
         </div>
@@ -89,7 +90,7 @@ export function Hero({
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                  Featured
+                  {t.common.featured}
                 </span>
                 <p className="font-display text-lg font-bold leading-tight text-white">
                   {featured.title}

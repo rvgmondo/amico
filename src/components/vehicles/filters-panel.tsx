@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
+import { useT } from "@/components/i18n";
 import { Input } from "@/components/ui/input";
 import { formatKm, formatPrice } from "@/lib/format";
+import { optionLabel } from "@/lib/i18n";
 import { filtersToQuery, type VehicleFilters } from "@/lib/vehicle-query";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +34,7 @@ export function FiltersPanel({
   onNavigate?: () => void;
 }) {
   const router = useRouter();
+  const { lang, t } = useT();
   const [q, setQ] = React.useState(filters.q);
 
   React.useEffect(() => setQ(filters.q), [filters.q]);
@@ -71,14 +74,14 @@ export function FiltersPanel({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-bold">Filters</h2>
+        <h2 className="font-display text-lg font-bold">{t.filters.title}</h2>
         {activeCount > 0 ? (
           <Link
             href="/vehicles"
             onClick={onNavigate}
             className="inline-flex items-center gap-1 text-sm font-medium text-accent-ink hover:underline"
           >
-            <X className="size-3.5" /> Clear all
+            <X className="size-3.5" /> {t.filters.clearAll}
           </Link>
         ) : null}
       </div>
@@ -95,21 +98,21 @@ export function FiltersPanel({
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search make or model"
+          placeholder={t.filters.search}
           className="pl-9"
-          aria-label="Search vehicles"
+          aria-label={t.filters.searchAria}
         />
       </form>
 
       {/* Make */}
-      <FilterGroup label="Make">
+      <FilterGroup label={t.filters.make}>
         <select
           value={filters.make}
           onChange={(e) => apply({ make: e.target.value })}
           className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Filter by make"
+          aria-label={t.filters.makeAria}
         >
-          <option value="">All makes</option>
+          <option value="">{t.filters.allMakes}</option>
           {facets.makes.map((m) => (
             <option key={m.slug} value={m.slug}>
               {m.name} ({m.count})
@@ -120,9 +123,9 @@ export function FiltersPanel({
 
       {/* Body type */}
       {facets.bodies.length ? (
-        <FilterGroup label="Body type">
+        <FilterGroup label={t.filters.body}>
           <CheckboxList
-            options={facets.bodies}
+            options={facets.bodies.map((o) => ({ ...o, label: optionLabel(lang, o.value, o.label) }))}
             selected={filters.body}
             onToggle={(v) => toggle("body", v)}
           />
@@ -130,17 +133,17 @@ export function FiltersPanel({
       ) : null}
 
       {/* Price */}
-      <FilterGroup label="Price">
+      <FilterGroup label={t.filters.price}>
         <div className="flex items-center gap-2">
           <RangeInput
-            aria-label="Minimum price"
+            aria-label={t.filters.minPrice}
             placeholder={formatPrice(facets.priceMin)}
             defaultValue={filters.minPrice}
             onCommit={(n) => apply({ minPrice: n })}
           />
           <span className="text-muted-foreground">-</span>
           <RangeInput
-            aria-label="Maximum price"
+            aria-label={t.filters.maxPrice}
             placeholder={formatPrice(facets.priceMax)}
             defaultValue={filters.maxPrice}
             onCommit={(n) => apply({ maxPrice: n })}
@@ -149,15 +152,15 @@ export function FiltersPanel({
       </FilterGroup>
 
       {/* Year */}
-      <FilterGroup label="Year">
+      <FilterGroup label={t.filters.year}>
         <div className="flex items-center gap-2">
           <select
             value={filters.minYear ?? ""}
             onChange={(e) => apply({ minYear: e.target.value ? Number(e.target.value) : undefined })}
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-            aria-label="Minimum year"
+            aria-label={t.filters.minYear}
           >
-            <option value="">From</option>
+            <option value="">{t.filters.from}</option>
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
@@ -168,9 +171,9 @@ export function FiltersPanel({
             value={filters.maxYear ?? ""}
             onChange={(e) => apply({ maxYear: e.target.value ? Number(e.target.value) : undefined })}
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-            aria-label="Maximum year"
+            aria-label={t.filters.maxYear}
           >
-            <option value="">To</option>
+            <option value="">{t.filters.to}</option>
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
@@ -181,19 +184,19 @@ export function FiltersPanel({
       </FilterGroup>
 
       {/* Mileage */}
-      <FilterGroup label="Mileage">
+      <FilterGroup label={t.filters.mileage}>
         <select
           value={filters.maxMileage ?? ""}
           onChange={(e) =>
             apply({ maxMileage: e.target.value ? Number(e.target.value) : undefined })
           }
           className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm"
-          aria-label="Maximum mileage"
+          aria-label={t.filters.maxMileage}
         >
-          <option value="">Any mileage</option>
+          <option value="">{t.filters.anyMileage}</option>
           {facets.mileages.map((m) => (
             <option key={m.value} value={m.value} disabled={m.count === 0}>
-              Up to {formatKm(m.value)} ({m.count})
+              {t.filters.upTo(formatKm(m.value), m.count)}
             </option>
           ))}
         </select>
@@ -201,9 +204,9 @@ export function FiltersPanel({
 
       {/* Fuel */}
       {facets.fuels.length ? (
-        <FilterGroup label="Fuel">
+        <FilterGroup label={t.filters.fuel}>
           <CheckboxList
-            options={facets.fuels}
+            options={facets.fuels.map((o) => ({ ...o, label: optionLabel(lang, o.value, o.label) }))}
             selected={filters.fuel}
             onToggle={(v) => toggle("fuel", v)}
           />
@@ -212,9 +215,9 @@ export function FiltersPanel({
 
       {/* Transmission */}
       {facets.transmissions.length ? (
-        <FilterGroup label="Transmission">
+        <FilterGroup label={t.filters.transmission}>
           <CheckboxList
-            options={facets.transmissions}
+            options={facets.transmissions.map((o) => ({ ...o, label: optionLabel(lang, o.value, o.label) }))}
             selected={filters.transmission}
             onToggle={(v) => toggle("transmission", v)}
           />

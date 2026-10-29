@@ -19,6 +19,8 @@ import { Gallery, type Photo } from "@/components/vehicles/gallery";
 import { VehicleActions } from "@/components/vehicles/vehicle-actions";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { formatKm, formatPrice, monthlyInstalment } from "@/lib/format";
+import { dictFor, optionLabel, type Lang } from "@/lib/i18n";
+import { getT } from "@/lib/i18n-server";
 import { lexicalToText } from "@/lib/lexical";
 import { getRelatedVehicles, getSettings, getVehicleBySlug, mediaUrl } from "@/lib/payload";
 import {
@@ -68,20 +70,22 @@ function toPhotos(vehicle: Vehicle): Photo[] {
     .filter((p) => p.full);
 }
 
-function specRows(vehicle: Vehicle): [string, string][] {
+function specRows(vehicle: Vehicle, lang: Lang): [string, string][] {
+  const s = dictFor(lang).car.spec;
+  const opt = (value: string | null | undefined, english: string) => optionLabel(lang, value, english);
   const rows: [string, string | undefined | null][] = [
-    ["Year", vehicle.year ? String(vehicle.year) : undefined],
-    ["Mileage", typeof vehicle.mileage === "number" ? formatKm(vehicle.mileage) : undefined],
-    ["Body type", vehicle.bodyType ? labelFor(BODY_TYPES, vehicle.bodyType) : undefined],
-    ["Fuel", vehicle.fuelType ? labelFor(FUEL_TYPES, vehicle.fuelType) : undefined],
-    ["Transmission", vehicle.transmission ? labelFor(TRANSMISSIONS, vehicle.transmission) : undefined],
-    ["Drivetrain", vehicle.drivetrain ? labelFor(DRIVETRAINS, vehicle.drivetrain) : undefined],
-    ["Engine", vehicle.engine || undefined],
-    ["Power", vehicle.power || undefined],
-    ["Exterior colour", vehicle.exteriorColour || undefined],
-    ["Interior colour", vehicle.interiorColour || undefined],
-    ["Condition", vehicle.condition ? labelFor(CONDITIONS, vehicle.condition) : undefined],
-    ["Stock no.", vehicle.stockNumber || undefined],
+    [s.year, vehicle.year ? String(vehicle.year) : undefined],
+    [s.mileage, typeof vehicle.mileage === "number" ? formatKm(vehicle.mileage) : undefined],
+    [s.body, vehicle.bodyType ? opt(vehicle.bodyType, labelFor(BODY_TYPES, vehicle.bodyType)) : undefined],
+    [s.fuel, vehicle.fuelType ? opt(vehicle.fuelType, labelFor(FUEL_TYPES, vehicle.fuelType)) : undefined],
+    [s.transmission, vehicle.transmission ? opt(vehicle.transmission, labelFor(TRANSMISSIONS, vehicle.transmission)) : undefined],
+    [s.drivetrain, vehicle.drivetrain ? opt(vehicle.drivetrain, labelFor(DRIVETRAINS, vehicle.drivetrain)) : undefined],
+    [s.engine, vehicle.engine || undefined],
+    [s.power, vehicle.power || undefined],
+    [s.exterior, vehicle.exteriorColour || undefined],
+    [s.interior, vehicle.interiorColour || undefined],
+    [s.condition, vehicle.condition ? opt(vehicle.condition, labelFor(CONDITIONS, vehicle.condition)) : undefined],
+    [s.stock, vehicle.stockNumber || undefined],
   ];
   return rows.filter((r): r is [string, string] => Boolean(r[1]));
 }
@@ -95,9 +99,9 @@ export default async function VehicleDetailPage({
   const vehicle = await getVehicleBySlug(slug);
   if (!vehicle) notFound();
 
-  const [settings, related] = await Promise.all([getSettings(), getRelatedVehicles(vehicle, 3)]);
+  const [settings, related, { lang, t }] = await Promise.all([getSettings(), getRelatedVehicles(vehicle, 3), getT()]);
   const photos = toPhotos(vehicle);
-  const specs = specRows(vehicle);
+  const specs = specRows(vehicle, lang);
   const make = typeof vehicle.make === "object" ? vehicle.make : null;
 
   const rate = settings.finance?.defaultRate ?? 11.75;
@@ -111,9 +115,9 @@ export default async function VehicleDetailPage({
     vehicle.year ? { icon: Calendar, label: String(vehicle.year) } : null,
     typeof vehicle.mileage === "number" ? { icon: Gauge, label: formatKm(vehicle.mileage) } : null,
     vehicle.transmission
-      ? { icon: Settings2, label: labelFor(TRANSMISSIONS, vehicle.transmission) }
+      ? { icon: Settings2, label: optionLabel(lang, vehicle.transmission, labelFor(TRANSMISSIONS, vehicle.transmission)) }
       : null,
-    vehicle.fuelType ? { icon: Fuel, label: labelFor(FUEL_TYPES, vehicle.fuelType) } : null,
+    vehicle.fuelType ? { icon: Fuel, label: optionLabel(lang, vehicle.fuelType, labelFor(FUEL_TYPES, vehicle.fuelType)) } : null,
     vehicle.exteriorColour ? { icon: Palette, label: vehicle.exteriorColour } : null,
   ].filter(Boolean) as { icon: typeof Calendar; label: string }[];
 
@@ -151,13 +155,13 @@ export default async function VehicleDetailPage({
       />
 
       <Container className="py-6">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <nav aria-label={t.car.breadcrumb} className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">
-            Home
+            {t.common.home}
           </Link>
           <ChevronRight className="size-3.5" />
           <Link href="/vehicles" className="hover:text-foreground">
-            Vehicles
+            {t.common.vehicles}
           </Link>
           <ChevronRight className="size-3.5" />
           <span className="line-clamp-1 text-foreground">{vehicle.title}</span>
@@ -170,14 +174,14 @@ export default async function VehicleDetailPage({
 
           {vehicle.description ? (
             <section className="flex flex-col gap-3">
-              <h2 className="font-display text-xl font-bold">Overview</h2>
+              <h2 className="font-display text-xl font-bold">{t.car.overview}</h2>
               <RichText data={vehicle.description as never} />
             </section>
           ) : null}
 
           {vehicle.features?.length ? (
             <section className="flex flex-col gap-3">
-              <h2 className="font-display text-xl font-bold">Key features</h2>
+              <h2 className="font-display text-xl font-bold">{t.car.features}</h2>
               <ul className="grid gap-2 sm:grid-cols-2">
                 {vehicle.features.map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
@@ -189,7 +193,7 @@ export default async function VehicleDetailPage({
           ) : null}
 
           <section className="flex flex-col gap-3">
-            <h2 className="font-display text-xl font-bold">Specifications</h2>
+            <h2 className="font-display text-xl font-bold">{t.car.specs}</h2>
             <dl className="grid grid-cols-1 overflow-hidden rounded-xl border border-border sm:grid-cols-2">
               {specs.map(([label, value], i) => (
                 <div
@@ -211,9 +215,9 @@ export default async function VehicleDetailPage({
           <div className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex flex-col gap-2">
               <div className="flex flex-wrap items-center gap-2">
-                {vehicle.status === "reserved" ? <Badge variant="navy">Reserved</Badge> : null}
-                {vehicle.status === "sold" ? <Badge variant="sale">Sold</Badge> : null}
-                {vehicle.featured ? <Badge variant="goldSoft">Featured</Badge> : null}
+                {vehicle.status === "reserved" ? <Badge variant="navy">{t.common.reserved}</Badge> : null}
+                {vehicle.status === "sold" ? <Badge variant="sale">{t.common.sold}</Badge> : null}
+                {vehicle.featured ? <Badge variant="goldSoft">{t.common.featured}</Badge> : null}
                 {make ? <Badge variant="muted">{make.name}</Badge> : null}
               </div>
               <h1 className="font-display text-2xl font-bold leading-tight tracking-tight">
@@ -224,12 +228,13 @@ export default async function VehicleDetailPage({
               </p>
               {monthly ? (
                 <p className="text-sm text-muted-foreground">
-                  Finance from{" "}
+                  {t.car.financeFrom}{" "}
                   <span className="font-semibold text-foreground">
-                    {formatPrice(monthly)}/mo
+                    {formatPrice(monthly)}
+                    {t.car.perMonth}
                   </span>{" "}
                   <Link href="/finance#calculator" className="text-accent-ink hover:underline">
-                    (estimate)
+                    {t.car.estimate}
                   </Link>
                 </p>
               ) : null}
@@ -272,10 +277,10 @@ export default async function VehicleDetailPage({
       {related.length ? (
         <section className="border-t border-border bg-subtle py-14">
           <Container className="flex flex-col gap-8">
-            <h2 className="font-display text-2xl font-bold">You might also like</h2>
+            <h2 className="font-display text-2xl font-bold">{t.car.related}</h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((v) => (
-                <VehicleCard key={v.id} vehicle={v} />
+                <VehicleCard key={v.id} vehicle={v} lang={lang} />
               ))}
             </div>
           </Container>

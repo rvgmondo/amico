@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { useT } from "@/components/i18n";
 import { formatPrice, monthlyInstalment } from "@/lib/format";
 
 function Row({
@@ -40,6 +41,7 @@ export function FinanceCalculator({
   defaultDepositPercent?: number;
   disclaimer?: string | null;
 }) {
+  const { lang, t } = useT();
   const [price, setPrice] = React.useState(defaultPrice);
   const [deposit, setDeposit] = React.useState(Math.round((defaultPrice * defaultDepositPercent) / 100));
   const [term, setTerm] = React.useState(defaultTerm);
@@ -51,7 +53,7 @@ export function FinanceCalculator({
   return (
     <div id="calculator" className="flex flex-col gap-6 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
       <div className="grid gap-6 sm:grid-cols-2">
-        <Row label="Vehicle price" value={formatPrice(price)}>
+        <Row label={t.calc.price} value={formatPrice(price)}>
           <input
             type="range"
             min={30000}
@@ -60,10 +62,10 @@ export function FinanceCalculator({
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
             className={rangeCls}
-            aria-label="Vehicle price"
+            aria-label={t.calc.price}
           />
         </Row>
-        <Row label="Deposit" value={formatPrice(deposit)}>
+        <Row label={t.calc.deposit} value={formatPrice(deposit)}>
           <input
             type="range"
             min={0}
@@ -72,10 +74,10 @@ export function FinanceCalculator({
             value={Math.min(deposit, price)}
             onChange={(e) => setDeposit(Number(e.target.value))}
             className={rangeCls}
-            aria-label="Deposit"
+            aria-label={t.calc.deposit}
           />
         </Row>
-        <Row label="Term" value={`${term} months`}>
+        <Row label={t.calc.term} value={t.calc.months(term)}>
           <input
             type="range"
             min={12}
@@ -84,10 +86,10 @@ export function FinanceCalculator({
             value={term}
             onChange={(e) => setTerm(Number(e.target.value))}
             className={rangeCls}
-            aria-label="Loan term in months"
+            aria-label={t.calc.termAria}
           />
         </Row>
-        <Row label="Interest rate" value={`${rate.toFixed(2)}%`}>
+        <Row label={t.calc.rate} value={`${rate.toFixed(2)}%`}>
           <input
             type="range"
             min={7}
@@ -96,24 +98,24 @@ export function FinanceCalculator({
             value={rate}
             onChange={(e) => setRate(Number(e.target.value))}
             className={rangeCls}
-            aria-label="Annual interest rate"
+            aria-label={t.calc.rateAria}
           />
         </Row>
       </div>
 
       <div className="flex flex-col items-center gap-1 rounded-xl bg-navy-gradient p-6 text-center text-white">
-        <span className="text-sm text-white/70">Estimated monthly instalment</span>
+        <span className="text-sm text-white/70">{t.calc.monthly}</span>
         <span className="font-display text-4xl font-extrabold text-accent">
           {formatPrice(monthly)}
         </span>
         <span className="text-xs text-white/60">
-          over {term} months at {rate.toFixed(2)}%, financing {formatPrice(principal)}
+          {t.calc.over(term, rate.toFixed(2), formatPrice(principal))}
         </span>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        {disclaimer ||
-          "This is an estimate only and not a quote or offer of finance. Actual terms depend on credit approval and the bank's rate."}
+        {/* The admin's disclaimer is English; Afrikaans readers get the same words in Afrikaans. */}
+        {lang === "af" ? t.calc.disclaimer : disclaimer || t.calc.disclaimer}
       </p>
     </div>
   );

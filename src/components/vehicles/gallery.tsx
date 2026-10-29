@@ -5,18 +5,20 @@ import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 
+import { useT } from "@/components/i18n";
 import { cn } from "@/lib/utils";
 
 export type Photo = { full: string; thumb: string; alt: string };
 
 export function Gallery({ photos, title }: { photos: Photo[]; title: string }) {
   const [active, setActive] = React.useState(0);
+  const { t } = useT();
   const [open, setOpen] = React.useState(false);
 
   if (!photos.length) {
     return (
       <div className="flex aspect-[16/10] items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground">
-        No photos available
+        {t.car.noPhotos}
       </div>
     );
   }
@@ -39,10 +41,10 @@ export function Gallery({ photos, title }: { photos: Photo[]; title: string }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Open full-screen gallery"
+          aria-label={t.car.openGallery}
           className="absolute bottom-3 right-3 inline-flex h-10 items-center gap-2 rounded-full bg-black/60 px-4 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-black/80"
         >
-          <Expand className="size-4" /> {photos.length} photos
+          <Expand className="size-4" /> {t.car.photoCount(photos.length)}
         </button>
         {photos.length > 1 ? (
           <>
@@ -59,7 +61,7 @@ export function Gallery({ photos, title }: { photos: Photo[]; title: string }) {
               key={p.thumb}
               type="button"
               onClick={() => setActive(i)}
-              aria-label={`View photo ${i + 1}`}
+              aria-label={t.car.viewPhoto(i + 1)}
               aria-current={i === active}
               className={cn(
                 "relative aspect-square overflow-hidden rounded-md border-2 transition-colors",
@@ -91,7 +93,7 @@ export function Gallery({ photos, title }: { photos: Photo[]; title: string }) {
               <Dialog.Close asChild>
                 <button
                   type="button"
-                  aria-label="Close gallery"
+                  aria-label={t.car.closeGallery}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
                 >
                   <X className="size-5" />
@@ -131,11 +133,12 @@ function GalleryArrow({
   large?: boolean;
 }) {
   const Icon = side === "left" ? ChevronLeft : ChevronRight;
+  const { t } = useT();
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === "left" ? "Previous photo" : "Next photo"}
+      aria-label={side === "left" ? t.car.prevPhoto : t.car.nextPhoto}
       className={cn(
         "absolute top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/75",
         side === "left" ? "left-3" : "right-3",

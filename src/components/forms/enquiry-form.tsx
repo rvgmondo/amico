@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import { submitEnquiry } from "@/app/actions/enquiry";
 import { Field, HoneypotField } from "@/components/forms/fields";
+import { useT } from "@/components/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,28 +29,29 @@ export function EnquiryForm({
   onSuccess?: () => void;
 }) {
   const isTestDrive = type === "test-drive";
+  const { t } = useT();
 
   const schema = React.useMemo(
     () =>
       z
         .object({
-          name: z.string().trim().min(2, "Please enter your name"),
+          name: z.string().trim().min(2, t.form.errName),
           phone: z.string().trim().optional().or(z.literal("")),
-          email: z.union([z.string().trim().email("Enter a valid email"), z.literal("")]).optional(),
+          email: z.union([z.string().trim().email(t.form.errEmail), z.literal("")]).optional(),
           preferredDate: z.string().optional().or(z.literal("")),
           message: z.string().max(2000).optional().or(z.literal("")),
-          consent: z.literal(true, { message: "Please accept to continue" }),
+          consent: z.literal(true, { message: t.form.errConsent }),
           [HONEYPOT]: z.string().optional(),
         })
         .refine((d) => Boolean(d.email) || Boolean(d.phone), {
-          message: "Provide an email or phone number",
+          message: t.form.errContact,
           path: ["phone"],
         })
         .refine((d) => !isTestDrive || Boolean(d.preferredDate), {
-          message: "Please choose a preferred date",
+          message: t.form.errDate,
           path: ["preferredDate"],
         }),
-    [isTestDrive],
+    [isTestDrive, t],
   );
 
   type FormValues = z.infer<typeof schema>;
@@ -76,7 +78,7 @@ export function EnquiryForm({
       [HONEYPOT]: String((values as Record<string, unknown>)[HONEYPOT] ?? ""),
     });
     if (res.ok) {
-      toast.success("Thanks, we'll be in touch shortly.");
+      toast.success(t.form.toastThanks);
       reset();
       onSuccess?.();
     } else {
@@ -88,9 +90,9 @@ export function EnquiryForm({
     return (
       <div className="flex flex-col items-center gap-3 py-6 text-center">
         <CheckCircle2 className="size-10 text-success" />
-        <p className="font-display text-lg font-bold">Enquiry sent</p>
+        <p className="font-display text-lg font-bold">{t.form.enquirySentTitle}</p>
         <p className="text-sm text-muted-foreground">
-          Thank you. A member of the Amico Motors team will contact you soon.
+          {t.form.enquirySentBody}
         </p>
       </div>
     );
@@ -100,36 +102,36 @@ export function EnquiryForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       {vehicle ? (
         <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
-          Enquiring about <span className="font-semibold text-foreground">{vehicle.title}</span>
+          {t.form.enquiringAbout} <span className="font-semibold text-foreground">{vehicle.title}</span>
         </p>
       ) : null}
 
       <HoneypotField {...register(HONEYPOT)} />
 
-      <Field label="Name" htmlFor="eq-name" required error={errors.name?.message}>
+      <Field label={t.form.name} htmlFor="eq-name" required error={errors.name?.message}>
         <Input id="eq-name" autoComplete="name" aria-invalid={!!errors.name} {...register("name")} />
       </Field>
 
       <div className={compact ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
-        <Field label="Phone" htmlFor="eq-phone" error={errors.phone?.message}>
+        <Field label={t.form.phone} htmlFor="eq-phone" error={errors.phone?.message}>
           <Input id="eq-phone" type="tel" autoComplete="tel" aria-invalid={!!errors.phone} {...register("phone")} />
         </Field>
-        <Field label="Email" htmlFor="eq-email" error={errors.email?.message}>
+        <Field label={t.form.email} htmlFor="eq-email" error={errors.email?.message}>
           <Input id="eq-email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register("email")} />
         </Field>
       </div>
 
       {isTestDrive ? (
-        <Field label="Preferred date" htmlFor="eq-date" required error={errors.preferredDate?.message}>
+        <Field label={t.form.preferredDate} htmlFor="eq-date" required error={errors.preferredDate?.message}>
           <Input id="eq-date" type="date" aria-invalid={!!errors.preferredDate} {...register("preferredDate")} />
         </Field>
       ) : null}
 
-      <Field label="Message" htmlFor="eq-msg" error={errors.message?.message}>
+      <Field label={t.form.message} htmlFor="eq-msg" error={errors.message?.message}>
         <Textarea
           id="eq-msg"
           rows={compact ? 3 : 4}
-          placeholder={isTestDrive ? "Any preferred time or questions?" : "How can we help?"}
+          placeholder={isTestDrive ? t.form.phTestDrive : t.form.phEnquiry}
           {...register("message")}
         />
       </Field>
@@ -143,9 +145,9 @@ export function EnquiryForm({
           {...register("consent")}
         />
         <span className="text-muted-foreground">
-          I agree that Amico Motors may contact me about this enquiry and process my details per the{" "}
+          {t.form.consentEnquiry}{" "}
           <a href="/privacy" className="text-accent-ink underline">
-            Privacy Policy
+            {t.form.privacy}
           </a>{" "}
           (POPIA).
         </span>
@@ -157,7 +159,7 @@ export function EnquiryForm({
       ) : null}
 
       <Button type="submit" variant="accent" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Sending" : isTestDrive ? "Book test drive" : "Send enquiry"}
+        {isSubmitting ? t.form.sending : isTestDrive ? t.form.bookTestDrive : t.form.sendEnquiry}
       </Button>
     </form>
   );

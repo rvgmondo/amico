@@ -4,8 +4,11 @@ import { Toaster } from "sonner";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { LangProvider } from "@/components/i18n";
 import { ThemeProvider } from "@/components/theme-provider";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { cmsLabel } from "@/lib/i18n";
+import { getT } from "@/lib/i18n-server";
 import { getNavigation, getSettings } from "@/lib/payload";
 
 import "../globals.css";
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const [settings, nav] = await Promise.all([getSettings(), getNavigation()]);
+  const [settings, nav, { lang, t }] = await Promise.all([getSettings(), getNavigation(), getT()]);
   const c = settings.contact;
   const whatsappHref = c?.whatsappNumber
     ? `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(c.whatsappMessage || "")}`
@@ -92,7 +95,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
 
   return (
     <html
-      lang="en"
+      lang={lang}
       suppressHydrationWarning
       className={`${montserrat.variable} ${openSans.variable} h-full antialiased`}
     >
@@ -101,26 +104,32 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
+        <LangProvider lang={lang}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <a
             href="#main"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
           >
-            Skip to content
+            {t.common.skip}
           </a>
           <SiteHeader
-            links={nav.header ?? []}
-            cta={nav.headerCta?.url ? { label: nav.headerCta.label ?? "Browse", url: nav.headerCta.url } : null}
+            links={(nav.header ?? []).map((l) => ({ ...l, label: cmsLabel(lang, l.label) }))}
+            cta={
+              nav.headerCta?.url
+                ? { label: cmsLabel(lang, nav.headerCta.label) || t.common.browseStock, url: nav.headerCta.url }
+                : null
+            }
             phone={phone}
             whatsappHref={whatsappHref}
           />
           <main id="main" className="flex flex-1 flex-col">
             {children}
           </main>
-          <SiteFooter settings={settings} footerColumns={nav.footerColumns} />
-          {whatsappHref ? <WhatsAppButton href={whatsappHref} /> : null}
+          <SiteFooter settings={settings} footerColumns={nav.footerColumns} lang={lang} />
+          {whatsappHref ? <WhatsAppButton href={whatsappHref} label={t.common.chatWhatsappAria} /> : null}
           <Toaster richColors position="top-center" />
         </ThemeProvider>
+        </LangProvider>
       </body>
     </html>
   );

@@ -5,6 +5,8 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
+import { cmsLabel } from "@/lib/i18n";
+import { getT } from "@/lib/i18n-server";
 import { getSettings } from "@/lib/payload";
 
 export const metadata: Metadata = {
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const settings = await getSettings();
+  const [settings, { lang, t }] = await Promise.all([getSettings(), getT()]);
   const c = settings.contact;
   const whatsappHref = c?.whatsappNumber
     ? `https://wa.me/${c.whatsappNumber}?text=${encodeURIComponent(c.whatsappMessage || "")}`
@@ -24,37 +26,37 @@ export default async function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Get in touch"
-        title="Contact us"
-        description="Pop in for a test drive, give us a call, or send a message and we'll be in touch."
+        eyebrow={t.contact.eyebrow}
+        title={t.contact.title}
+        description={t.contact.lead}
       />
       <Container className="grid gap-10 py-12 lg:grid-cols-[1fr_1.2fr]">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
-            <ContactRow icon={MapPin} label="Address">
+            <ContactRow icon={MapPin} label={t.contact.address}>
               {c?.street}, {c?.suburb}, {c?.city} {c?.postalCode}
             </ContactRow>
             {c?.phones?.map((p, i) => (
-              <ContactRow key={i} icon={Phone} label={p.label ?? "Phone"}>
+              <ContactRow key={i} icon={Phone} label={cmsLabel(lang, p.label) || t.contact.phone}>
                 <a href={`tel:${(p.number ?? "").replace(/[^\d+]/g, "")}`} className="hover:text-accent">
                   {p.number}
                 </a>
               </ContactRow>
             ))}
             {c?.email ? (
-              <ContactRow icon={Mail} label="Email">
+              <ContactRow icon={Mail} label={t.contact.email}>
                 <a href={`mailto:${c.email}`} className="hover:text-accent">
                   {c.email}
                 </a>
               </ContactRow>
             ) : null}
-            <ContactRow icon={Clock} label="Hours">
+            <ContactRow icon={Clock} label={t.contact.hours}>
               <ul className="flex flex-col gap-0.5">
                 {settings.hours?.map((h, i) => (
                   <li key={i} className="flex justify-between gap-6">
-                    <span>{h.day}</span>
+                    <span>{(h.day && t.hours.full[h.day]) || h.day}</span>
                     <span className="text-muted-foreground">
-                      {h.closed ? "Closed" : `${h.open}-${h.close}`}
+                      {h.closed ? t.hours.closed : `${h.open}-${h.close}`}
                     </span>
                   </li>
                 ))}
@@ -65,7 +67,7 @@ export default async function ContactPage() {
           {whatsappHref ? (
             <Button asChild variant="whatsapp" className="w-full">
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="size-4" /> Chat on WhatsApp
+                <MessageCircle className="size-4" /> {t.common.chatWhatsapp}
               </a>
             </Button>
           ) : null}
@@ -73,7 +75,7 @@ export default async function ContactPage() {
           {settings.location?.mapEmbedUrl ? (
             <div className="overflow-hidden rounded-2xl border border-border">
               <iframe
-                title="Amico Motors location"
+                title={t.common.mapTitle}
                 src={settings.location.mapEmbedUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -84,7 +86,7 @@ export default async function ContactPage() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h2 className="font-display text-2xl font-bold">Send us a message</h2>
+          <h2 className="font-display text-2xl font-bold">{t.contact.send}</h2>
           <ContactForm />
         </div>
       </Container>

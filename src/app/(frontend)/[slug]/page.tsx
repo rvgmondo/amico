@@ -8,6 +8,7 @@ import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Stars } from "@/components/ui/stars";
 import { getPageBySlug, getTeam, getTestimonials, mediaUrl } from "@/lib/payload";
+import { getT } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
@@ -28,13 +29,13 @@ export async function generateMetadata({
 
 export default async function CmsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const page = await getPageBySlug(slug);
+  const [page, { t }] = await Promise.all([getPageBySlug(slug), getT()]);
   if (!page) notFound();
 
   return (
     <>
       <PageHero
-        eyebrow={slug === "about" ? "About us" : undefined}
+        eyebrow={slug === "about" ? t.page.about : undefined}
         title={page.hero?.heading || page.title}
         description={page.hero?.subheading || undefined}
       />
@@ -52,14 +53,14 @@ export default async function CmsPage({ params }: { params: Promise<{ slug: stri
 }
 
 async function AboutExtras() {
-  const [team, testimonials] = await Promise.all([getTeam(), getTestimonials(6)]);
+  const [team, testimonials, { t: words }] = await Promise.all([getTeam(), getTestimonials(6), getT()]);
 
   return (
     <>
       {team.length ? (
         <section className="bg-subtle py-14">
           <Container className="flex flex-col gap-8">
-            <SectionHeading eyebrow="Our team" title="The people who'll help you" />
+            <SectionHeading eyebrow={words.page.teamEyebrow} title={words.page.teamTitle} />
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {team.map((m) => {
                 const photo = typeof m.photo === "object" ? m.photo : null;
@@ -91,7 +92,7 @@ async function AboutExtras() {
       {testimonials.length ? (
         <section className="py-14">
           <Container className="flex flex-col gap-8">
-            <SectionHeading eyebrow="What people say" title="In our customers' words" />
+            <SectionHeading eyebrow={words.page.saysEyebrow} title={words.page.saysTitle} />
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((t) => (
                 <figure key={t.id} className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6">

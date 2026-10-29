@@ -3,15 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
+import { cmsLabel, dictFor, hoursSummary, type Lang } from "@/lib/i18n";
 import type { Navigation, SiteSetting } from "@/payload-types";
 
 export function SiteFooter({
   settings,
   footerColumns,
+  lang,
 }: {
   settings: SiteSetting;
   footerColumns?: Navigation["footerColumns"];
+  lang: Lang;
 }) {
+  const t = dictFor(lang);
   const c = settings.contact;
   const year = new Date().getFullYear();
   const whatsappHref = c?.whatsappNumber
@@ -24,7 +28,7 @@ export function SiteFooter({
         <div className="flex flex-col gap-4">
           <Link
             href="/"
-            aria-label="Amico Motors home"
+            aria-label={t.common.homeAria}
             className="w-fit rounded-lg bg-white px-3 py-2.5 shadow-sm"
           >
             <Image
@@ -36,7 +40,7 @@ export function SiteFooter({
             />
           </Link>
           <p className="max-w-xs text-sm text-surface-navy-muted">
-            {settings.tagline || "Quality used cars in Pretoria, with honest, friendly service."}
+            {cmsLabel(lang, settings.tagline) || t.footer.taglineFallback}
           </p>
           {whatsappHref ? (
             <a
@@ -45,15 +49,15 @@ export function SiteFooter({
               rel="noopener noreferrer"
               className="inline-flex w-fit items-center gap-2 rounded-full bg-[#0B8457] px-4 py-2 text-sm font-semibold text-white transition-[filter] hover:brightness-95"
             >
-              <MessageCircle className="size-4" /> Chat on WhatsApp
+              <MessageCircle className="size-4" /> {t.common.chatWhatsapp}
             </a>
           ) : null}
         </div>
 
         {(footerColumns ?? []).map((col, i) => (
-          <nav key={i} aria-label={col.heading ?? "Footer"} className="flex flex-col gap-3">
+          <nav key={i} aria-label={cmsLabel(lang, col.heading) || t.footer.footerNav} className="flex flex-col gap-3">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-surface-navy-muted">
-              {col.heading}
+              {cmsLabel(lang, col.heading)}
             </h2>
             <ul className="flex flex-col gap-2.5">
               {(col.links ?? []).map((link, j) => (
@@ -62,7 +66,7 @@ export function SiteFooter({
                     href={link.url}
                     className="text-sm text-surface-navy-foreground/85 transition-colors hover:text-accent"
                   >
-                    {link.label}
+                    {cmsLabel(lang, link.label)}
                   </Link>
                 </li>
               ))}
@@ -72,7 +76,7 @@ export function SiteFooter({
 
         <div className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-surface-navy-muted">
-            Visit us
+            {t.footer.visit}
           </h2>
           <address className="flex flex-col gap-2.5 text-sm not-italic text-surface-navy-foreground/85">
             {c?.street ? (
@@ -98,7 +102,7 @@ export function SiteFooter({
             {settings.hours?.length ? (
               <span className="flex items-start gap-2">
                 <Clock className="mt-0.5 size-4 shrink-0 text-accent" />
-                <span>Mon-Fri 8:00-17:00, Sat 8:00-13:00</span>
+                <span>{hoursSummary(lang, settings.hours)}</span>
               </span>
             ) : null}
           </address>
@@ -113,10 +117,10 @@ export function SiteFooter({
           </p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-accent">
-              Privacy
+              {t.footer.privacy}
             </Link>
             <Link href="/terms" className="hover:text-accent">
-              Terms
+              {t.footer.terms}
             </Link>
           </div>
         </Container>

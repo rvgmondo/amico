@@ -8,6 +8,8 @@ import { Pagination } from "@/components/vehicles/pagination";
 import { SortSelect } from "@/components/vehicles/sort-select";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { formatKm } from "@/lib/format";
+import { optionLabel, type Dict, type Lang } from "@/lib/i18n";
+import { getT } from "@/lib/i18n-server";
 import { getClient, getFacetSource, getMakeBySlug } from "@/lib/payload";
 import {
   buildWhere,
@@ -42,6 +44,7 @@ export default async function VehiclesPage({
   searchParams: Promise<SearchParams>;
 }) {
   const filters = parseVehicleFilters(await searchParams);
+  const { lang, t } = await getT();
   const [source, make] = await Promise.all([
     getFacetSource(),
     filters.make ? getMakeBySlug(filters.make) : Promise.resolve(null),
@@ -70,20 +73,20 @@ export default async function VehiclesPage({
     (filters.maxMileage != null ? 1 : 0) +
     (filters.q ? 1 : 0);
 
-  const chips = buildChips(filters, make?.name);
+  const chips = buildChips(filters, lang, t, make?.name);
 
   return (
     <>
       <section className="border-b border-border bg-subtle">
         <Container className="py-10">
           <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-accent-ink">
-            Our vehicles
+            {t.list.eyebrow}
           </p>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {make ? `${make.name} for sale` : "Quality used cars"}
+            {make ? t.list.makeTitle(make.name) : t.list.title}
           </h1>
           <p className="mt-2 text-muted-foreground">
-            {res.totalDocs} {res.totalDocs === 1 ? "vehicle" : "vehicles"} available
+            {t.list.available(res.totalDocs)}
           </p>
         </Container>
       </section>
@@ -107,7 +110,7 @@ export default async function VehiclesPage({
                 total={res.totalDocs}
               />
               <span className="text-sm text-muted-foreground">
-                Showing {res.docs.length} of {res.totalDocs}
+                {t.list.showing(res.docs.length, res.totalDocs)}
               </span>
             </div>
             <SortSelect filters={filters} />
@@ -133,25 +136,25 @@ export default async function VehiclesPage({
           {res.docs.length ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {res.docs.map((v, i) => (
-                <VehicleCard key={v.id} vehicle={v} priority={i < 3} />
+                <VehicleCard key={v.id} vehicle={v} priority={i < 3} lang={lang} />
               ))}
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border py-20 text-center">
-              <p className="font-display text-lg font-bold">No vehicles match your filters</p>
+              <p className="font-display text-lg font-bold">{t.list.noneTitle}</p>
               <p className="max-w-sm text-sm text-muted-foreground">
-                Try widening your search, or clear the filters to see everything in stock.
+                {t.list.noneBody}
               </p>
               <Link
                 href="/vehicles"
                 className="mt-2 inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
               >
-                Clear filters
+                {t.list.clear}
               </Link>
             </div>
           )}
 
-          <Pagination filters={filters} totalPages={res.totalPages} />
+          <Pagination filters={filters} totalPages={res.totalPages} t={t} />
         </div>
       </Container>
     </>
@@ -159,7 +162,7 @@ export default async function VehiclesPage({
 }
 
 /** Removable active-filter chips: each links to the filter set minus that value. */
-function buildChips(filters: ReturnType<typeof parseVehicleFilters>, makeName?: string) {
+function buildChips(filters: ReturnType<typeof parseVehicleFilters>, lang: Lang, t: Dict, makeName?: string) {
   const chips: { key: string; label: string; query: string }[] = [];
   const without = (patch: Partial<typeof filters>) =>
     filtersToQuery({ ...filters, ...patch, page: 1 });
@@ -169,33 +172,33 @@ function buildChips(filters: ReturnType<typeof parseVehicleFilters>, makeName?: 
   for (const b of filters.body)
     chips.push({
       key: `body-${b}`,
-      label: labelFor(BODY_TYPES, b),
+      label: optionLabel(lang, b, labelFor(BODY_TYPES, b)),
       query: without({ body: filters.body.filter((x) => x !== b) }),
     });
   for (const f of filters.fuel)
     chips.push({
       key: `fuel-${f}`,
-      label: labelFor(FUEL_TYPES, f),
+      label: optionLabel(lang, f, labelFor(FUEL_TYPES, f)),
       query: without({ fuel: filters.fuel.filter((x) => x !== f) }),
     });
-  for (const t of filters.transmission)
+  for (const tr of filters.transmission)
     chips.push({
-      key: `trans-${t}`,
-      label: labelFor(TRANSMISSIONS, t),
-      query: without({ transmission: filters.transmission.filter((x) => x !== t) }),
+      key: `trans-${tr}`,
+      label: optionLabel(lang, tr, labelFor(TRANSMISSIONS, tr)),
+      query: without({ transmission: filters.transmission.filter((x) => x !== tr) }),
     });
   if (filters.minPrice != null)
-    chips.push({ key: "minPrice", label: `Min R${filters.minPrice}`, query: without({ minPrice: undefined }) });
+    chips.push({ key: "minPrice", label: t.list.chipMin(`R${filters.minPrice}`), query: without({ minPrice: undefined }) });
   if (filters.maxPrice != null)
-    chips.push({ key: "maxPrice", label: `Max R${filters.maxPrice}`, query: without({ maxPrice: undefined }) });
+    chips.push({ key: "maxPrice", label: t.list.chipMax(`R${filters.maxPrice}`), query: without({ maxPrice: undefined }) });
   if (filters.minYear != null)
-    chips.push({ key: "minYear", label: `From ${filters.minYear}`, query: without({ minYear: undefined }) });
+    chips.push({ key: "minYear", label: t.list.chipFrom(filters.minYear), query: without({ minYear: undefined }) });
   if (filters.maxYear != null)
-    chips.push({ key: "maxYear", label: `To ${filters.maxYear}`, query: without({ maxYear: undefined }) });
+    chips.push({ key: "maxYear", label: t.list.chipTo(filters.maxYear), query: without({ maxYear: undefined }) });
   if (filters.maxMileage != null)
     chips.push({
       key: "maxMileage",
-      label: `Up to ${formatKm(filters.maxMileage)}`,
+      label: t.list.chipUpTo(formatKm(filters.maxMileage)),
       query: without({ maxMileage: undefined }),
     });
   if (filters.q) chips.push({ key: "q", label: `"${filters.q}"`, query: without({ q: "" }) });

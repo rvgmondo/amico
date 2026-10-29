@@ -4,12 +4,22 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { formatKm, formatPrice } from "@/lib/format";
+import { dictFor, optionLabel, type Lang } from "@/lib/i18n";
 import { mediaUrl, primaryImage } from "@/lib/payload";
 import { FUEL_TYPES, labelFor, TRANSMISSIONS } from "@/lib/vehicle-options";
 import { cn } from "@/lib/utils";
 import type { Vehicle } from "@/payload-types";
 
-export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; priority?: boolean }) {
+export function VehicleCard({
+  vehicle,
+  priority = false,
+  lang = "en",
+}: {
+  vehicle: Vehicle;
+  priority?: boolean;
+  lang?: Lang;
+}) {
+  const t = dictFor(lang);
   const img = primaryImage(vehicle);
   const src = mediaUrl(img, "card");
   const sold = vehicle.status === "sold";
@@ -35,16 +45,16 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
               )}
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">No image</div>
+            <div className="flex h-full items-center justify-center text-muted-foreground">{t.common.noImage}</div>
           )}
 
           <div className="absolute left-3 top-3 flex gap-2">
             {sold ? (
-              <Badge variant="sale">Sold</Badge>
+              <Badge variant="sale">{t.common.sold}</Badge>
             ) : reserved ? (
-              <Badge variant="navy">Reserved</Badge>
+              <Badge variant="navy">{t.common.reserved}</Badge>
             ) : vehicle.featured ? (
-              <Badge variant="gold">Featured</Badge>
+              <Badge variant="gold">{t.common.featured}</Badge>
             ) : null}
           </div>
         </div>
@@ -64,12 +74,12 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
               {vehicle.transmission ? (
                 <span className="inline-flex items-center gap-1">
                   <Settings2 className="size-3.5" aria-hidden />
-                  {labelFor(TRANSMISSIONS, vehicle.transmission)}
+                  {optionLabel(lang, vehicle.transmission, labelFor(TRANSMISSIONS, vehicle.transmission))}
                 </span>
               ) : null}
               {vehicle.fuelType ? (
                 <span className="inline-flex items-center gap-1">
-                  <Fuel className="size-3.5" aria-hidden /> {labelFor(FUEL_TYPES, vehicle.fuelType)}
+                  <Fuel className="size-3.5" aria-hidden /> {optionLabel(lang, vehicle.fuelType, labelFor(FUEL_TYPES, vehicle.fuelType))}
                 </span>
               ) : null}
             </div>
@@ -80,7 +90,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
               {formatPrice(vehicle.price)}
             </span>
             <span className="text-xs font-medium text-accent-ink opacity-0 transition-opacity group-hover:opacity-100">
-              View details →
+              {t.common.viewDetails} →
             </span>
           </div>
         </div>
